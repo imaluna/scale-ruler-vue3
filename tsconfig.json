@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./packages/scale-ruler/tsconfig.json"
+    },
+    {
+      "path": "./examples/tsconfig.json"
+    }
+  ]
+}

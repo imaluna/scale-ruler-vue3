@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "../../../vue3-sketch-ruler"
+		},
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../scale-ruler-test"
+		}
+	],
+	"settings": {
+		"typescript.tsdk": "./node_modules/typescript/lib",
+		"explorer.openEditors.visible": 1,
+		"breadcrumbs.enabled": true,
+		"workbench.settings.enableNaturalLanguageSearch": false,
+		"workbench.sideBar.location": "left",
+		"liveServer.settings.multiRootWorkspaceName": "scale-ruler"
+	}
+}
