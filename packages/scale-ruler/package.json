@@ -2,11 +2,11 @@
   "name": "scale-ruler-vue3",
   "version": "1.0.0",
   "description": "",
-  "main": "index.mjs",
+  "main": "lib/index.mjs",
   "module": "lib/index.mjs",
-  "jsnext:main":"index.mjs",
-  "browser":"index.umd.js",
-  "types": "index.d.ts",
+  "jsnext:main":"lib/index.mjs",
+  "browser":"lib/index.umd.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "dev": "vite build -w",
     "build": "vite build"

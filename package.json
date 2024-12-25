@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "deepmerge": "^4.3.1",
     "vue": "^3.5.13"
   },
   "devDependencies": {
@@ -30,12 +31,13 @@
     "jsdom": "^25.0.1",
     "npm-run-all2": "^7.0.1",
     "prettier": "^3.3.3",
+    "sass-embedded": "^1.83.0",
+    "scale-ruler-vue3": "workspace:*",
     "typescript": "~5.6.3",
     "vite": "^6.0.1",
+    "vite-plugin-dts": "^4.2.2",
     "vite-plugin-vue-devtools": "^7.6.5",
     "vitest": "^2.1.5",
-    "vue-tsc": "^2.1.10",
-    "vite-plugin-dts": "4.2.2",
-    "scale-ruler-vue3": "workspace:*"
+    "vue-tsc": "^2.1.10"
   }
 }
