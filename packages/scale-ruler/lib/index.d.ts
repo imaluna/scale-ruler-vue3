@@ -60,6 +60,7 @@ export declare interface PositionLineConfig {
     adsorptionXList: number[];
     adsorptionYList: number[];
     adsorptionGap: number;
+    zIndex: number;
 }
 
 export declare interface RulerConfig {
@@ -70,6 +71,7 @@ export declare interface RulerConfig {
     fontSize: number;
     fontFamily: string;
     lineColor: string;
+    zIndex: number;
 }
 
 export declare interface ScaleRulerOption {
@@ -101,6 +103,7 @@ export declare interface ScaleRulerOption {
 export declare interface ScrollBarConfig {
     bgColor: string;
     opacity: number;
+    zIndex: number;
 }
 
 export { }

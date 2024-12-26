@@ -37,14 +37,17 @@ export const defaultOpt: RequiredScaleRulerOpt = {
     adsorptionXList: [],
     adsorptionYList: [],
     // 吸附距离
-    adsorptionGap: 4
+    adsorptionGap: 4,
+    zIndex: 300
   },
   // 画布的样式
   canvasStyle: {},
   // 滚动条配置
   scrollBarConfig: {
     bgColor: '#000000',
-    opacity: 0.4
+    opacity: 0.4,
+    zIndex: 500,
+    barSize: 8
   },
   // 标尺配置
   rulerConfig: {
@@ -61,7 +64,8 @@ export const defaultOpt: RequiredScaleRulerOpt = {
     // 标尺数值的字体
     fontFamily: 'Arial',
     // 标尺刻度线的颜色
-    lineColor: '#000000'
+    lineColor: '#000000',
+    zIndex: 500
   },
   // 画布缩放回调
   onScale: () => {},

@@ -30,10 +30,13 @@ export interface PositionLineConfig {
   adsorptionYList: number[];
   // 吸附距离
   adsorptionGap: number;
+  zIndex: number;
 }
 export interface ScrollBarConfig {
   bgColor: string;
   opacity: number;
+  barSize: number;
+  zIndex: number;
 }
 export interface RulerConfig {
   // x轴-水平标尺的高度
@@ -50,11 +53,15 @@ export interface RulerConfig {
   fontFamily: string;
   // 标尺刻度线的颜色
   lineColor: string;
+  zIndex: number;
 }
 export interface AnyRecord {
   [key: string]: any;
 }
 
+/**
+ * 容器信息
+ */
 export interface ContainerInfo extends AnyRecord {
   originWidth?: number;
   originHeight?: number;
@@ -63,4 +70,36 @@ export interface ContainerInfo extends AnyRecord {
   width?: number;
   height?: number;
 }
+
+/**
+ * 画布信息
+ */
+export interface CanvasInfo extends AnyRecord {
+  scale?: number;
+  translateX?: number;
+  translateY?: number;
+  minTranslateX?: number;
+  maxTranslateX?: number;
+  minTranslateY?: number;
+  maxTranslateY?: number;
+}
+
+/**
+ * 滚动条信息
+ */
+export interface ScrollBarInfo extends AnyRecord {
+  totalWidth?: number;
+  totalHeight?: number;
+  isXLarge?: boolean;
+  isYLarge?: boolean;
+  isLarge?: boolean;
+  width?: number;
+  height?: number;
+  left?: number;
+  top?: number;
+}
+export interface RulerInfo extends AnyRecord {}
 export type RequiredScaleRulerOpt = Required<ScaleRulerOption>;
+export type RequiredContainerInfo = Required<ContainerInfo>;
+export type RequiredCanvasInfo = Required<CanvasInfo>;
+export type RequiredScrollBarInfo = Required<ScrollBarInfo>;

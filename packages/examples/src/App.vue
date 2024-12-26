@@ -18,6 +18,8 @@
         :canvas-width="opt.canvasWidth"
         :canvas-height="opt.canvasHeight"
         :container-auto-size="true"
+        :auto-scale="opt.autoScale"
+        :canvas-style="opt.canvasStyle"
       ></ScaleRuler>
       <footer>我是底部</footer>
     </main>
@@ -30,7 +32,11 @@ import ScaleRuler from 'scale-ruler-vue3';
 import type { ScaleRulerOption } from 'scale-ruler-vue3';
 const opt = reactive<ScaleRulerOption>({
   canvasWidth: 1920,
-  canvasHeight: 1000
+  canvasHeight: 1000,
+  autoScale: false,
+  canvasStyle: {
+    backgroundColor: '#ccc'
+  }
 });
 </script>
 <style lang="scss">
