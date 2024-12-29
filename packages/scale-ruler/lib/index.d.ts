@@ -103,6 +103,7 @@ export declare interface ScaleRulerOption {
 export declare interface ScrollBarConfig {
     bgColor: string;
     opacity: number;
+    barSize: number;
     zIndex: number;
 }
 

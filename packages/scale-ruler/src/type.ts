@@ -70,19 +70,27 @@ export interface ContainerInfo extends AnyRecord {
   width?: number;
   height?: number;
 }
-
 /**
- * 画布信息
+ * 画布移动配置
  */
-export interface CanvasInfo extends AnyRecord {
+export interface TransformInfo {
   scale?: number;
   translateX?: number;
   translateY?: number;
+}
+/**
+ * 移动边界信息
+ */
+export interface BoundaryInfo {
   minTranslateX?: number;
   maxTranslateX?: number;
   minTranslateY?: number;
   maxTranslateY?: number;
 }
+/**
+ * 画布信息
+ */
+export interface CanvasInfo extends AnyRecord, TransformInfo, BoundaryInfo {}
 
 /**
  * 滚动条信息
@@ -103,3 +111,4 @@ export type RequiredScaleRulerOpt = Required<ScaleRulerOption>;
 export type RequiredContainerInfo = Required<ContainerInfo>;
 export type RequiredCanvasInfo = Required<CanvasInfo>;
 export type RequiredScrollBarInfo = Required<ScrollBarInfo>;
+

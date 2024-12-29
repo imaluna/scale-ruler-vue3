@@ -65,7 +65,7 @@ export const defaultOpt: RequiredScaleRulerOpt = {
     fontFamily: 'Arial',
     // 标尺刻度线的颜色
     lineColor: '#000000',
-    zIndex: 500
+    zIndex: 400
   },
   // 画布缩放回调
   onScale: () => {},

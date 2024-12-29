@@ -18,7 +18,6 @@
         :canvas-width="opt.canvasWidth"
         :canvas-height="opt.canvasHeight"
         :container-auto-size="true"
-        :auto-scale="opt.autoScale"
         :canvas-style="opt.canvasStyle"
       ></ScaleRuler>
       <footer>我是底部</footer>
@@ -36,7 +35,8 @@ const opt = reactive<ScaleRulerOption>({
   autoScale: false,
   canvasStyle: {
     backgroundColor: '#ccc'
-  }
+  },
+  useRuler: false
 });
 </script>
 <style lang="scss">

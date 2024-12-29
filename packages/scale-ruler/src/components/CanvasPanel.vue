@@ -9,7 +9,7 @@ import type {
   RequiredScaleRulerOpt,
   ContainerInfo,
   CanvasInfo
-} from '../type';
+} from '@/type';
 const props = defineProps({
   containerInfo: {
     type: Object as PropType<ContainerInfo>,
@@ -24,7 +24,6 @@ const props = defineProps({
     required: true
   }
 });
-
 const styles = computed((): AnyRecord => {
   return {
     position: 'absolute',

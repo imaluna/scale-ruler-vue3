@@ -17,6 +17,7 @@
       :container-info="containerInfo"
       :opt="opt"
       :canvas-info="canvasInfo"
+      :transform-info="transformInfo"
     >
       <slot></slot>
     </CanvasPanel>
@@ -25,20 +26,29 @@
       :opt="opt"
       :container-info="containerInfo"
       :scroll-bar-info="scrollBarInfo"
+      :scroll-bar-opacity="scrollBarOpacity"
+      :transform-info="transformInfo"
     />
     <ScrollBar
       v-if="scrollBarInfo.isYLarge"
       :opt="opt"
       :container-info="containerInfo"
       :scroll-bar-info="scrollBarInfo"
+      :scroll-bar-opacity="scrollBarOpacity"
+      :transform-info="transformInfo"
       is-y
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, withDefaults, ref, watch } from 'vue';
-import type { ScaleRulerOption, RequiredScaleRulerOpt } from '../type';
+import { defineProps, withDefaults, ref, watch, reactive, computed } from 'vue';
+import type {
+  ScaleRulerOption,
+  RequiredScaleRulerOpt,
+  TransformInfo,
+  CanvasInfo
+} from '@/type';
 import CanvasPanel from './CanvasPanel.vue';
 import ScrollBar from './ScrollBar.vue';
 import Ruler from './Ruler.vue';
@@ -47,14 +57,45 @@ import { defaultProps, defaultOpt } from '@/config';
 import { useContainer } from '@/hooks/useContainer';
 import { useTransform } from '@/hooks/useTransform';
 import { useScrollBar } from '@/hooks/useScrollBar';
+import { useKeyScale } from '../hooks/useKeyScale';
+import { useSetBoundary } from '../hooks/useSetBoundary';
+import { useMouseWheel } from '../hooks/useMouseWheel';
 const props = withDefaults(defineProps<ScaleRulerOption>(), defaultProps);
 const opt = ref<RequiredScaleRulerOpt>(
   deepmerge(defaultOpt, props) as RequiredScaleRulerOpt
 );
 const container = ref(null);
 const { containerInfo, containerStyle } = useContainer(opt, container);
-const canvasInfo = useTransform(opt, containerInfo);
-const scrollBarInfo = useScrollBar(opt, containerInfo, canvasInfo);
+/**
+ * 动态移动
+ */
+const { transformInfo } = useTransform(opt, containerInfo);
+const { boundaryInfo } = useSetBoundary(opt, containerInfo, transformInfo);
+const canvasInfo = computed(
+  (): CanvasInfo => Object.assign({}, transformInfo, boundaryInfo.value)
+);
+const { scrollBarInfo } = useScrollBar(opt, containerInfo, transformInfo);
+/**
+ * 保存初始的transform，之后不再监听
+ */
+const originTransform = reactive<TransformInfo>({});
+const watchCanvasInfo = watch(
+  () => canvasInfo.value,
+  (newVal) => {
+    if (newVal.scale) {
+      const insertObj = {
+        scale: newVal.scale,
+        translateX: newVal.translateX,
+        translateY: newVal.translateY
+      };
+      if (!originTransform.scale) {
+        Object.assign(originTransform, insertObj);
+      }
+      watchCanvasInfo();
+    }
+  }
+);
+
 watch(
   () => props,
   () => {
@@ -64,4 +105,16 @@ watch(
     deep: true
   }
 );
+// 代理键盘事件
+useKeyScale(opt, containerInfo, transformInfo);
+// 代理鼠标滚轮事件
+const { scrollBarOpacity } = useMouseWheel(
+  opt,
+  containerInfo,
+  transformInfo,
+  boundaryInfo,
+  container,
+  scrollBarInfo
+);
+console.log(scrollBarOpacity, '--scrollBarOpacity-');
 </script>
