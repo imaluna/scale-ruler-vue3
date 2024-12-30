@@ -45,7 +45,6 @@ export const useMouseWheel = (
           useChangeLarge(opt, containerInfo, transformInfo, newScale);
         } else {
           // 单指移动事件
-          console.log(scrollBarOpacity, '--scrollBarOpacity-1-');
           if (!scrollBarInfo.value.isLarge || scrollBarOpacity.isMouseDown)
             return;
           e.preventDefault();

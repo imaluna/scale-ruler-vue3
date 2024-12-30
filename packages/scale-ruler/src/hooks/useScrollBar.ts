@@ -13,7 +13,6 @@ export const useScrollBar = (
   transformInfo: Reactive<TransformInfo>
 ) => {
   const scrollBarInfo = computed((): ScrollBarInfo => {
-    console.log(transformInfo, '--transformInfo-33');
     const _opt = opt.value;
     const { width, height } = containerInfo.value as RequiredContainerInfo;
     const { translateX, translateY, scale } =

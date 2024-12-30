@@ -5,6 +5,17 @@
     :width="rulerInfo.width"
     :height="rulerInfo.height"
   ></canvas>
+  <div>
+    <PositionLine
+      v-for="id in Object.keys(positionLineMap)"
+      :key="id"
+      :opt="props.opt"
+      :is-y="!props.isY"
+      :transform-info="props.transformInfo"
+      :container-info="props.containerInfo"
+      :line-info="positionLineMap[id]"
+    />
+  </div>
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
@@ -14,9 +25,12 @@ import type {
   AnyRecord,
   RequiredScaleRulerOpt,
   ContainerInfo,
-  CanvasInfo
-} from '../type';
-
+  CanvasInfo,
+  TransformInfo
+} from '@/type';
+import { useAdsorption } from '@/hooks/useAdsorption';
+import { useAddPositionLine } from '@/hooks/useAddPositionLine';
+import PositionLine from './PositionLine.vue';
 const props = defineProps({
   containerInfo: {
     type: Object as PropType<ContainerInfo>,
@@ -33,6 +47,10 @@ const props = defineProps({
   isY: {
     type: Boolean,
     default: false
+  },
+  transformInfo: {
+    type: Object as PropType<TransformInfo>,
+    required: true
   }
 });
 const rulerInfo = computed((): AnyRecord => {
@@ -56,15 +74,19 @@ const rulerRef = ref();
 watch(
   [() => props.containerInfo, () => props.canvasInfo],
   () => {
-    usePaintRuler(
-      props.opt,
-      props.canvasInfo,
-      props.isY,
-      rulerRef
-    );
+    usePaintRuler(props.opt, props.canvasInfo, props.isY, rulerRef);
   },
   {
     deep: true
   }
 );
+const { adsorptionList } = useAdsorption(props.opt, props.isY);
+const { positionLineMap } = useAddPositionLine(
+  props.opt,
+  adsorptionList,
+  props.transformInfo,
+  props.isY,
+  rulerRef
+);
+console.log(positionLineMap);
 </script>

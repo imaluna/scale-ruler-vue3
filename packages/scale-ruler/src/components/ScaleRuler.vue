@@ -5,12 +5,14 @@
         :opt="opt"
         :container-info="containerInfo"
         :canvas-info="canvasInfo"
+        :transform-info="transformInfo"
       />
       <Ruler
         is-y
         :opt="opt"
         :container-info="containerInfo"
         :canvas-info="canvasInfo"
+        :transform-info="transformInfo"
       />
     </template>
     <CanvasPanel

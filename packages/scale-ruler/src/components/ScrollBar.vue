@@ -10,7 +10,6 @@ import type {
   ContainerInfo,
   ScrollBarInfo,
   TransformInfo,
-  RequiredCanvasInfo,
   RequiredContainerInfo
 } from '@/type';
 const props = defineProps({
@@ -82,8 +81,8 @@ function mousemoveEvent(e: MouseEvent) {
   } else {
     const move = e.pageX - currentInfo.startX;
     let barLeft = currentInfo.left + move;
-    barLeft = Math.min(Math.max(0, barLeft), height - scrollBarInfo.height);
-    const left = (barLeft * scrollBarInfo.totalWidth) / height;
+    barLeft = Math.min(Math.max(0, barLeft), width - scrollBarInfo.width);
+    const left = (barLeft * scrollBarInfo.totalWidth) / width;
     translateX = props.opt.containerXPadding - left;
     transformInfo.value.translateX = translateX;
   }

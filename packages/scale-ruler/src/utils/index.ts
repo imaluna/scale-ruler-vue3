@@ -19,3 +19,14 @@ export const getGridSize = (scale: number) => {
   if (scale <= 4) return 2;
   return 1;
 };
+
+// 获取元素的offsetTop和offsetLeft
+export const getOffset = (node: HTMLElement) => {
+  const rect = node.getBoundingClientRect();
+  const top =
+    rect.top + (document.body.scrollTop || document.documentElement.scrollTop);
+  const left =
+    rect.left +
+    (document.body.scrollLeft || document.documentElement.scrollLeft);
+  return { top, left };
+};
