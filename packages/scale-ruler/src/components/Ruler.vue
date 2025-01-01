@@ -98,4 +98,6 @@ const { positionLineMap } = useAddPositionLine(
 function handleRemove(id: number | string) {
   delete positionLineMap[id];
 }
+
+
 </script>

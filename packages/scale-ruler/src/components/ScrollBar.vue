@@ -29,7 +29,7 @@ const props = defineProps({
     type: Object as PropType<ScrollBarInfo>,
     required: true
   },
-  scrollBarOpacity: {
+  globalInfo: {
     type: Object as PropType<AnyRecord>,
     required: true
   },
@@ -38,7 +38,7 @@ const props = defineProps({
     required: true
   }
 });
-const { scrollBarOpacity, transformInfo } = toRefs(props);
+const { globalInfo, transformInfo } = toRefs(props);
 const styles = computed((): AnyRecord => {
   const { opt, scrollBarInfo, isY } = props;
   const { scrollBarConfig } = opt;
@@ -46,7 +46,7 @@ const styles = computed((): AnyRecord => {
     position: 'absolute',
     borderRadius: '4px',
     backgroundColor: scrollBarConfig.bgColor,
-    opacity: props.scrollBarOpacity[isY ? 'yOpacity' : 'xOpacity'] || 0,
+    opacity: props.globalInfo[isY ? 'yOpacity' : 'xOpacity'] || 0,
     transition: 'opacity 300ms',
     cursor: 'pointer',
     zIndex: scrollBarConfig.zIndex,
@@ -63,24 +63,24 @@ const styles = computed((): AnyRecord => {
   return res;
 });
 const scrollBarRef = ref(null);
-const currentInfo: AnyRecord = {};
+const currentPropInfo: AnyRecord = {};
 function mousemoveEvent(e: MouseEvent) {
   e.preventDefault();
-  if (!scrollBarOpacity.value.isMouseDown) return;
+  if (!globalInfo.value.scrollBarMouseDown) return;
   let { translateX, translateY } =
     transformInfo.value as Required<TransformInfo>;
   const scrollBarInfo = props.scrollBarInfo as Required<ScrollBarInfo>;
   const { width, height } = props.containerInfo as RequiredContainerInfo;
   if (props.isY) {
-    const move = e.pageY - currentInfo.startY;
-    let barTop = currentInfo.top + move;
+    const move = e.pageY - currentPropInfo.startY;
+    let barTop = currentPropInfo.top + move;
     barTop = Math.min(Math.max(0, barTop), height - scrollBarInfo.height);
     const top = (barTop * scrollBarInfo.totalHeight) / height;
     translateY = props.opt.containerYPadding - top;
     transformInfo.value.translateY = translateY;
   } else {
-    const move = e.pageX - currentInfo.startX;
-    let barLeft = currentInfo.left + move;
+    const move = e.pageX - currentPropInfo.startX;
+    let barLeft = currentPropInfo.left + move;
     barLeft = Math.min(Math.max(0, barLeft), width - scrollBarInfo.width);
     const left = (barLeft * scrollBarInfo.totalWidth) / width;
     translateX = props.opt.containerXPadding - left;
@@ -90,27 +90,29 @@ function mousemoveEvent(e: MouseEvent) {
 onMounted(() => {
   if (scrollBarRef.value) {
     const node = scrollBarRef.value as HTMLElement;
-    const current = props.isY ? 'yOpacity' : 'xOpacity';
+    const currentProp = props.isY ? 'yOpacity' : 'xOpacity';
     node.addEventListener('mouseenter', () => {
-      scrollBarOpacity.value[current] = props.opt.scrollBarConfig.opacity;
-      scrollBarOpacity.value[props.isY ? 'xOpacity' : 'yOpacity'] = 0;
-      scrollBarOpacity.value.isMouseEnter = true;
+      globalInfo.value[currentProp] = props.opt.scrollBarConfig.opacity;
+      globalInfo.value[props.isY ? 'xOpacity' : 'yOpacity'] = 0;
+      globalInfo.value.scrollBarEnter = true;
     });
     node.addEventListener('mouseleave', () => {
-      scrollBarOpacity.value.isMouseEnter = false;
-      scrollBarOpacity.value[current] = 0;
+      if (globalInfo.value.scrollBarMouseDown) return;
+      globalInfo.value.scrollBarEnter = false;
+      globalInfo.value[currentProp] = 0;
     });
     node.addEventListener('mousedown', (e) => {
-      scrollBarOpacity.value.isMouseDown = true;
-      currentInfo.startX = e.pageX;
-      currentInfo.startY = e.pageY;
-      currentInfo.left = props.scrollBarInfo.left;
-      currentInfo.top = props.scrollBarInfo.top;
+      e.preventDefault();
+      globalInfo.value.scrollBarMouseDown = true;
+      currentPropInfo.startX = e.pageX;
+      currentPropInfo.startY = e.pageY;
+      currentPropInfo.left = props.scrollBarInfo.left;
+      currentPropInfo.top = props.scrollBarInfo.top;
       document.addEventListener('mousemove', mousemoveEvent);
     });
     document.addEventListener('mouseup', () => {
-      if (!scrollBarOpacity.value.isMouseDown) return;
-      scrollBarOpacity.value.isMouseDown = false;
+      if (!globalInfo.value.scrollBarMouseDown) return;
+      globalInfo.value.scrollBarMouseDown = false;
       document.removeEventListener('mousemove', mousemoveEvent);
     });
   }

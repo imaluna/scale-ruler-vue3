@@ -10,7 +10,7 @@ import { getBoundary } from './useSetBoundary';
 /**
  * 改变大小
  */
-export const useChangeLarge = (
+export const useChangeScale = (
   opt: Ref<RequiredScaleRulerOpt>,
   containerInfo: ComputedRef<ContainerInfo>,
   transformInfo: Reactive<TransformInfo>,

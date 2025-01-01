@@ -9,12 +9,13 @@
       <button id="btn6">隐藏标尺</button>
       <button id="btn7">放大</button>
       <button id="btn8">缩小</button>
-      <button id="btn9">还原</button>
+      <button id="btn9" @click="handleReset">还原</button>
     </aside>
     <main>
       <header>我是头部</header>
       <ScaleRuler
         class="container"
+        ref="scaleRulerRef"
         :canvas-width="opt.canvasWidth"
         :canvas-height="opt.canvasHeight"
         :container-auto-size="true"
@@ -38,6 +39,14 @@ const opt = reactive<ScaleRulerOption>({
   },
   useRuler: false
 });
+
+const scaleRulerRef = ref(null);
+function handleReset() {
+  if (scaleRulerRef.value) {
+    console.log('还原');
+    scaleRulerRef.value.reset();
+  }
+}
 </script>
 <style lang="scss">
 body,

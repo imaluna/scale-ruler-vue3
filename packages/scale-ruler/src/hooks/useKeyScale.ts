@@ -4,7 +4,7 @@ import type {
   TransformInfo,
   ContainerInfo
 } from '@/type';
-import { useChangeLarge } from './useChangeLarge';
+import { useChangeScale } from './useChangeScale';
 /**
  * 快捷键放大事件
  */
@@ -22,7 +22,7 @@ export const useKeyScale = (
           e.preventDefault();
           const newScale =
             (transformInfo.scale as number) + (code === 187 ? 0.05 : -0.05);
-          useChangeLarge(opt, containerInfo, transformInfo, newScale);
+          useChangeScale(opt, containerInfo, transformInfo, newScale);
         }
       }
     });

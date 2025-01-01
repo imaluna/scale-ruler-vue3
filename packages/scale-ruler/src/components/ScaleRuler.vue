@@ -28,7 +28,7 @@
       :opt="opt"
       :container-info="containerInfo"
       :scroll-bar-info="scrollBarInfo"
-      :scroll-bar-opacity="scrollBarOpacity"
+      :global-info="globalInfo"
       :transform-info="transformInfo"
     />
     <ScrollBar
@@ -36,7 +36,7 @@
       :opt="opt"
       :container-info="containerInfo"
       :scroll-bar-info="scrollBarInfo"
-      :scroll-bar-opacity="scrollBarOpacity"
+      :global-info="globalInfo"
       :transform-info="transformInfo"
       is-y
     />
@@ -49,7 +49,8 @@ import type {
   ScaleRulerOption,
   RequiredScaleRulerOpt,
   TransformInfo,
-  CanvasInfo
+  CanvasInfo,
+  AnyRecord
 } from '@/type';
 import CanvasPanel from './CanvasPanel.vue';
 import ScrollBar from './ScrollBar.vue';
@@ -59,9 +60,9 @@ import { defaultProps, defaultOpt } from '@/config';
 import { useContainer } from '@/hooks/useContainer';
 import { useTransform } from '@/hooks/useTransform';
 import { useScrollBar } from '@/hooks/useScrollBar';
-import { useKeyScale } from '../hooks/useKeyScale';
-import { useSetBoundary } from '../hooks/useSetBoundary';
-import { useMouseWheel } from '../hooks/useMouseWheel';
+import { useKeyScale } from '@/hooks/useKeyScale';
+import { useSetBoundary } from '@/hooks/useSetBoundary';
+import { useMouseWheel } from '@/hooks/useMouseWheel';
 const props = withDefaults(defineProps<ScaleRulerOption>(), defaultProps);
 const opt = ref<RequiredScaleRulerOpt>(
   deepmerge(defaultOpt, props) as RequiredScaleRulerOpt
@@ -78,22 +79,23 @@ const canvasInfo = computed(
 );
 const { scrollBarInfo } = useScrollBar(opt, containerInfo, transformInfo);
 /**
- * 保存初始的transform，之后不再监听
+ * 保存初始的transformInfo，之后不再监听
  */
 const originTransform = reactive<TransformInfo>({});
-const watchCanvasInfo = watch(
-  () => canvasInfo.value,
+const watchTransform = watch(
+  () => transformInfo.scale,
   (newVal) => {
-    if (newVal.scale) {
+    console.log(newVal, '--newVal-');
+    if (newVal) {
       const insertObj = {
-        scale: newVal.scale,
-        translateX: newVal.translateX,
-        translateY: newVal.translateY
+        scale: newVal,
+        translateX: transformInfo.translateX,
+        translateY: transformInfo.translateY
       };
       if (!originTransform.scale) {
         Object.assign(originTransform, insertObj);
       }
-      watchCanvasInfo();
+      watchTransform();
     }
   }
 );
@@ -107,15 +109,29 @@ watch(
     deep: true
   }
 );
+
 // 代理键盘事件
 useKeyScale(opt, containerInfo, transformInfo);
+// 全局的一些缓存配置
+const globalInfo = reactive<AnyRecord>({});
 // 代理鼠标滚轮事件
-const { scrollBarOpacity } = useMouseWheel(
+useMouseWheel(
   opt,
   containerInfo,
   transformInfo,
   boundaryInfo,
   container,
-  scrollBarInfo
+  scrollBarInfo,
+  globalInfo
 );
+
+// 还原
+function reset() {
+  Object.assign(transformInfo, originTransform);
+}
+// 删除所有定位线
+function removeAllPositionLine() {}
+// 切换标尺隐藏或显示
+function toggleRuler() {}
+defineExpose({ reset });
 </script>
