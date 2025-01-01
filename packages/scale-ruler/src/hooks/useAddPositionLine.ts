@@ -1,85 +1,50 @@
-import { reactive, watch, computed, ref, onMounted } from 'vue';
-import type { RequiredScaleRulerOpt, TransformInfo, AnyRecord } from '@/type';
+import { reactive, onMounted } from 'vue';
+import type {
+  RequiredScaleRulerOpt,
+  TransformInfo,
+  AnyRecord,
+  ContainerInfo,
+  RequiredContainerInfo
+} from '@/type';
 import type { Reactive, Ref } from 'vue';
-import { getOffset } from '@/utils';
-export const translateToCoordinate = (
-  translate: number,
-  transformInfo: TransformInfo,
-  isY: boolean
-) => {
-  const { scale, translateX, translateY } =
-    transformInfo as Required<TransformInfo>;
-  const distance = translate - (isY ? translateY : translateX);
-  return distance / scale;
-};
-
-export const coordinateToTranslate = (
-  coordinate: number,
-  transformInfo: TransformInfo,
-  isY: boolean
-) => {
-  const { scale, translateX, translateY } =
-    transformInfo as Required<TransformInfo>;
-  const distance = coordinate * scale;
-  return (isY ? translateY : translateX) + distance;
-};
-
-export function checkAdSorptionLine(
-  list: number[],
-  transformInfo: TransformInfo,
-  adsorptionGap: number,
-  translate: number,
-  coordinate: number,
-  isY: boolean
-) {
-  const res: AnyRecord = { coordinate, translate };
-  const len = list.length;
-  if (len > 0) {
-    let start = 0;
-    while (start < len) {
-      const value = list[start];
-      if (Math.abs(coordinate - value) <= adsorptionGap) {
-        // 可以吸附
-        res.coordinate = value;
-        res.translate = coordinateToTranslate(value, transformInfo, isY);
-        break;
-      } else {
-        if (value > coordinate) {
-          break;
-        }
-      }
-      start++;
-    }
-  }
-  return res;
-}
+import { getOffset, translateToCoordinate, checkAdSorptionLine } from '@/utils';
 
 export const useAddPositionLine = (
-  opt: RequiredScaleRulerOpt,
+  opt: Ref<RequiredScaleRulerOpt>,
+  containerInfo: Ref<ContainerInfo>,
   adsorptionList: Reactive<number[]>,
-  transformInfo: TransformInfo,
+  transformInfo: Ref<TransformInfo>,
   isY: boolean,
   rulerRef: Ref
 ) => {
-  let lineId: number = 1;
-  const positionLineMap = reactive<AnyRecord>({});
-  let currentLine: AnyRecord = {};
+  let id: number = 1;
+  const positionLineMap = reactive<AnyRecord>([]);
+  let currentId: number = -1;
   let isMouseDown = false;
   function positionMoveEvent(e: MouseEvent) {
-    if (isMouseDown && currentLine.id) {
-      const move = isY ? e.pageY : e.pageX - currentLine.start;
-      const translate = currentLine.translate + move;
-      const coordinate = translateToCoordinate(translate, transformInfo, isY);
+    if (isMouseDown && currentId > -1) {
+      e.preventDefault();
+      const { xRulerHeight, yRulerWidth } = opt.value.rulerConfig;
+      const info = positionLineMap[currentId];
+      const move = (isY ? e.pageY : e.pageX) - info.start;
+      const translate = info.startTranslate + move;
+      const showTip = translate > (isY ? xRulerHeight : yRulerWidth);
+      const coordinate = translateToCoordinate(
+        transformInfo.value,
+        translate,
+        isY
+      );
       const checkInfo = checkAdSorptionLine(
         adsorptionList,
-        transformInfo,
-        opt.positionLineConfig.adsorptionGap,
+        transformInfo.value,
+        opt.value.positionLineConfig.adsorptionGap,
         translate,
         coordinate,
         isY
       );
-      Object.assign(currentLine, checkInfo);
-      positionLineMap[currentLine.id] = currentLine;
+      positionLineMap[currentId].showTip = showTip;
+      positionLineMap[currentId].translate = checkInfo.translate;
+      positionLineMap[currentId].coordinate = checkInfo.coordinate;
     }
   }
 
@@ -91,22 +56,40 @@ export const useAddPositionLine = (
         const start = isY ? e.pageY : e.pageX;
         const translate = start - (isY ? rulerOffset.top : rulerOffset.left);
         const lineInfo: AnyRecord = {
-          translate,
+          startTranslate: translate,
+          translate: translate,
           start,
-          id: lineId,
-          coordinate: translateToCoordinate(translate, transformInfo, isY)
+          id,
+          coordinate: translateToCoordinate(
+            transformInfo.value,
+            translate,
+            isY
+          ),
+          showTip: false,
+          needAnimate: false
         };
-        currentLine = lineInfo;
-        positionLineMap[lineId++] = lineInfo;
+        currentId = id;
+        positionLineMap[id++] = lineInfo;
         isMouseDown = true;
         document.addEventListener('mousemove', positionMoveEvent);
       });
-      //todo 是否删除定位线
-      document.addEventListener('mouseup', (e: MouseEvent) => {
+      document.addEventListener('mouseup', () => {
         document.removeEventListener('mousemove', positionMoveEvent);
-        if (!isMouseDown) return;
+        if (!isMouseDown || currentId < 0) return;
         isMouseDown = false;
-        currentLine = {};
+        const info = positionLineMap[currentId];
+        const { width, height } = containerInfo.value as RequiredContainerInfo;
+        const { xRulerHeight, yRulerWidth } = opt.value.rulerConfig;
+        if (
+          info.translate <= (isY ? xRulerHeight : yRulerWidth) ||
+          info.translate >= (isY ? height : width)
+        ) {
+          delete positionLineMap[currentId];
+        } else {
+          positionLineMap[currentId].showTip = false;
+          positionLineMap[currentId].needAnimate = true;
+        }
+        currentId = -1;
       });
     }
   });

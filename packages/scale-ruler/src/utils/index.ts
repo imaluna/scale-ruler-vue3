@@ -1,4 +1,4 @@
-import type { AnyRecord } from '@/type';
+import type { AnyRecord, TransformInfo } from '@/type';
 
 /**
  * 设置样式
@@ -30,3 +30,59 @@ export const getOffset = (node: HTMLElement) => {
     (document.body.scrollLeft || document.documentElement.scrollLeft);
   return { top, left };
 };
+/**
+ * 定位线的位移转换为坐标
+ */
+export const translateToCoordinate = (
+  transformInfo: TransformInfo,
+  translate: number,
+  isY: boolean
+) => {
+  const { scale, translateX, translateY } =
+    transformInfo as Required<TransformInfo>;
+  const distance = translate - (isY ? translateY : translateX);
+  return distance / scale;
+};
+/**
+ * 定位线的坐标转换为位移
+ */
+export const coordinateToTranslate = (
+  transformInfo: TransformInfo,
+  coordinate: number,
+  isY: boolean
+) => {
+  const { scale, translateX, translateY } =
+    transformInfo as Required<TransformInfo>;
+  const distance = coordinate * scale;
+  return (isY ? translateY : translateX) + distance;
+};
+
+export function checkAdSorptionLine(
+  adsorptionList: number[],
+  transformInfo: TransformInfo,
+  adsorptionGap: number,
+  translate: number,
+  coordinate: number,
+  isY: boolean
+) {
+  const res: AnyRecord = { coordinate, translate };
+  const len = adsorptionList.length;
+  if (len > 0) {
+    let start = 0;
+    while (start < len) {
+      const value = adsorptionList[start];
+      if (Math.abs(coordinate - value) <= adsorptionGap) {
+        // 可以吸附
+        res.coordinate = value;
+        res.translate = coordinateToTranslate(transformInfo, value, isY);
+        break;
+      } else {
+        if (value > coordinate) {
+          break;
+        }
+      }
+      start++;
+    }
+  }
+  return res;
+}

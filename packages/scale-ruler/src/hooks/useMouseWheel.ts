@@ -11,7 +11,6 @@ import type {
   ContainerInfo,
   AnyRecord,
   ScrollBarInfo,
-  RequiredCanvasInfo,
   BoundaryInfo
 } from '@/type';
 import { useChangeLarge } from './useChangeLarge';

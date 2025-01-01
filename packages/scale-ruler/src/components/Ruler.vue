@@ -5,7 +5,10 @@
     :width="rulerInfo.width"
     :height="rulerInfo.height"
   ></canvas>
-  <div>
+  <div
+    v-if="props.opt.usePositionLine"
+    :class="'position-line-' + (props.isY ? 'x' : 'y')"
+  >
     <PositionLine
       v-for="id in Object.keys(positionLineMap)"
       :key="id"
@@ -14,11 +17,13 @@
       :transform-info="props.transformInfo"
       :container-info="props.containerInfo"
       :line-info="positionLineMap[id]"
+      :adsorption-list="adsorptionList"
+      @remove-position-line="handleRemove"
     />
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, toRefs } from 'vue';
 import type { PropType } from 'vue';
 import { usePaintRuler } from '../hooks/usePaintRuler';
 import type {
@@ -53,6 +58,7 @@ const props = defineProps({
     required: true
   }
 });
+const { opt, transformInfo, containerInfo } = toRefs(props);
 const rulerInfo = computed((): AnyRecord => {
   const { isY, containerInfo, opt } = props;
   return {
@@ -82,11 +88,14 @@ watch(
 );
 const { adsorptionList } = useAdsorption(props.opt, props.isY);
 const { positionLineMap } = useAddPositionLine(
-  props.opt,
+  opt,
+  containerInfo,
   adsorptionList,
-  props.transformInfo,
-  props.isY,
+  transformInfo,
+  !props.isY,
   rulerRef
 );
-console.log(positionLineMap);
+function handleRemove(id: number | string) {
+  delete positionLineMap[id];
+}
 </script>

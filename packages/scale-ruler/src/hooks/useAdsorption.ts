@@ -53,7 +53,7 @@ export const useAdsorption = (opt: RequiredScaleRulerOpt, isY: boolean) => {
    * 画布尺寸
    */
   const canvasSize = computed((): number =>
-    isY ? opt.canvasHeight : opt.canvasWidth
+    !isY ? opt.canvasHeight : opt.canvasWidth
   );
   /**
    * 画布尺寸变化
@@ -61,8 +61,13 @@ export const useAdsorption = (opt: RequiredScaleRulerOpt, isY: boolean) => {
   watch(
     () => canvasSize.value,
     (newVal, oldVal) => {
-      removeAdsorptionList(oldVal);
+      if (oldVal !== undefined) {
+        removeAdsorptionList(oldVal);
+      }
       addAdsorptionList(newVal);
+    },
+    {
+      immediate: true
     }
   );
   return { adsorptionList };

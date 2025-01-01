@@ -111,4 +111,3 @@ export type RequiredScaleRulerOpt = Required<ScaleRulerOption>;
 export type RequiredContainerInfo = Required<ContainerInfo>;
 export type RequiredCanvasInfo = Required<CanvasInfo>;
 export type RequiredScrollBarInfo = Required<ScrollBarInfo>;
-

@@ -23,7 +23,7 @@ export const useScrollBar = (
     const isYLarge = height < totalHeight;
     const isLarge = isXLarge || isYLarge;
     const left = width * ((_opt.containerXPadding - translateX) / totalWidth);
-    const top = height * ((_opt.containerYPadding - translateY) / totalWidth);
+    const top = height * ((_opt.containerYPadding - translateY) / totalHeight);
     const scrollWidth = (width / totalWidth) * width;
     const scrollHeight = (height / totalHeight) * height;
     return {

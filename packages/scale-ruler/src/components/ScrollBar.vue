@@ -106,10 +106,10 @@ onMounted(() => {
       currentInfo.startY = e.pageY;
       currentInfo.left = props.scrollBarInfo.left;
       currentInfo.top = props.scrollBarInfo.top;
-
       document.addEventListener('mousemove', mousemoveEvent);
     });
     document.addEventListener('mouseup', () => {
+      if (!scrollBarOpacity.value.isMouseDown) return;
       scrollBarOpacity.value.isMouseDown = false;
       document.removeEventListener('mousemove', mousemoveEvent);
     });

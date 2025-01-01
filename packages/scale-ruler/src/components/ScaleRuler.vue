@@ -118,5 +118,4 @@ const { scrollBarOpacity } = useMouseWheel(
   container,
   scrollBarInfo
 );
-console.log(scrollBarOpacity, '--scrollBarOpacity-');
 </script>
