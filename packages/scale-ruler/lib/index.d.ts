@@ -5,7 +5,19 @@ import { PublicProps } from 'vue';
 
 declare const __VLS_component: DefineComponent<ScaleRulerOption, {
 reset: typeof reset;
-}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<ScaleRulerOption> & Readonly<{}>, {
+changeScale: typeof changeScale;
+removeAllPositionLine: typeof removeAllPositionLine;
+showRuler(): void;
+hideRuler(): void;
+showAllPositionLine(): void;
+hideAllPositionLine(): void;
+addAdsorptionLine(data: number | number[], isY?: boolean): void;
+removeAdsorptionLine(data: number | number[], isY?: boolean): void;
+}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
+"update:scale": (...args: any[]) => void;
+}, string, PublicProps, Readonly<ScaleRulerOption> & Readonly<{
+"onUpdate:scale"?: ((...args: any[]) => any) | undefined;
+}>, {
 scale: number;
 minScale: number;
 maxScale: number;
@@ -37,6 +49,8 @@ declare function __VLS_template(): {
     };
     refs: {
         container: HTMLDivElement;
+        xRuler: any;
+        yRuler: any;
     };
     attrs: Partial<{}>;
 };
@@ -53,6 +67,8 @@ declare interface AnyRecord {
     [key: string]: any;
 }
 
+declare function changeScale(scale: number): void;
+
 declare const _default: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
 export default _default;
 
@@ -64,6 +80,8 @@ export declare interface PositionLineConfig {
     adsorptionGap: number;
     zIndex: number;
 }
+
+declare function removeAllPositionLine(): void;
 
 declare function reset(): void;
 

@@ -56,7 +56,9 @@ export const coordinateToTranslate = (
   const distance = coordinate * scale;
   return (isY ? translateY : translateX) + distance;
 };
-
+/**
+ * 检查吸附线
+ */
 export function checkAdSorptionLine(
   adsorptionList: number[],
   transformInfo: TransformInfo,

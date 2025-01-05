@@ -87,10 +87,6 @@ export interface BoundaryInfo {
   minTranslateY?: number;
   maxTranslateY?: number;
 }
-/**
- * 画布信息
- */
-export interface CanvasInfo extends AnyRecord, TransformInfo, BoundaryInfo {}
 
 /**
  * 滚动条信息
@@ -109,5 +105,4 @@ export interface ScrollBarInfo extends AnyRecord {
 export interface RulerInfo extends AnyRecord {}
 export type RequiredScaleRulerOpt = Required<ScaleRulerOption>;
 export type RequiredContainerInfo = Required<ContainerInfo>;
-export type RequiredCanvasInfo = Required<CanvasInfo>;
 export type RequiredScrollBarInfo = Required<ScrollBarInfo>;

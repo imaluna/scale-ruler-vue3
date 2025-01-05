@@ -2,23 +2,22 @@
   <div ref="container" :style="containerStyle">
     <template v-if="opt.useRuler">
       <Ruler
+        ref="xRuler"
         :opt="opt"
         :container-info="containerInfo"
-        :canvas-info="canvasInfo"
         :transform-info="transformInfo"
       />
       <Ruler
+        ref="yRuler"
         is-y
         :opt="opt"
         :container-info="containerInfo"
-        :canvas-info="canvasInfo"
         :transform-info="transformInfo"
       />
     </template>
     <CanvasPanel
       :container-info="containerInfo"
       :opt="opt"
-      :canvas-info="canvasInfo"
       :transform-info="transformInfo"
     >
       <slot></slot>
@@ -44,12 +43,11 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, withDefaults, ref, watch, reactive, computed } from 'vue';
+import { defineProps, withDefaults, ref, watch, reactive } from 'vue';
 import type {
   ScaleRulerOption,
   RequiredScaleRulerOpt,
   TransformInfo,
-  CanvasInfo,
   AnyRecord
 } from '@/type';
 import CanvasPanel from './CanvasPanel.vue';
@@ -63,10 +61,13 @@ import { useScrollBar } from '@/hooks/useScrollBar';
 import { useKeyScale } from '@/hooks/useKeyScale';
 import { useSetBoundary } from '@/hooks/useSetBoundary';
 import { useMouseWheel } from '@/hooks/useMouseWheel';
+import { useChangeScale } from '../hooks/useChangeScale';
 const props = withDefaults(defineProps<ScaleRulerOption>(), defaultProps);
 const opt = ref<RequiredScaleRulerOpt>(
   deepmerge(defaultOpt, props) as RequiredScaleRulerOpt
 );
+const emit = defineEmits(['update:scale']);
+
 const container = ref(null);
 const { containerInfo, containerStyle } = useContainer(opt, container);
 /**
@@ -74,28 +75,24 @@ const { containerInfo, containerStyle } = useContainer(opt, container);
  */
 const { transformInfo } = useTransform(opt, containerInfo);
 const { boundaryInfo } = useSetBoundary(opt, containerInfo, transformInfo);
-const canvasInfo = computed(
-  (): CanvasInfo => Object.assign({}, transformInfo, boundaryInfo.value)
-);
 const { scrollBarInfo } = useScrollBar(opt, containerInfo, transformInfo);
 /**
  * 保存初始的transformInfo，之后不再监听
  */
 const originTransform = reactive<TransformInfo>({});
-const watchTransform = watch(
+watch(
   () => transformInfo.scale,
   (newVal) => {
-    console.log(newVal, '--newVal-');
     if (newVal) {
-      const insertObj = {
-        scale: newVal,
-        translateX: transformInfo.translateX,
-        translateY: transformInfo.translateY
-      };
       if (!originTransform.scale) {
+        const insertObj = {
+          scale: newVal,
+          translateX: transformInfo.translateX,
+          translateY: transformInfo.translateY
+        };
         Object.assign(originTransform, insertObj);
       }
-      watchTransform();
+      emit('update:scale', newVal);
     }
   }
 );
@@ -109,7 +106,17 @@ watch(
     deep: true
   }
 );
-
+function changeScale(scale: number) {
+  useChangeScale(opt, containerInfo, transformInfo, scale);
+}
+watch(
+  () => opt.value.scale,
+  (newVal) => {
+    if (newVal !== transformInfo.scale) {
+      changeScale(newVal);
+    }
+  }
+);
 // 代理键盘事件
 useKeyScale(opt, containerInfo, transformInfo);
 // 全局的一些缓存配置
@@ -129,9 +136,81 @@ useMouseWheel(
 function reset() {
   Object.assign(transformInfo, originTransform);
 }
+const xRuler = ref(null);
+const yRuler = ref(null);
 // 删除所有定位线
-function removeAllPositionLine() {}
+function removeAllPositionLine() {
+  if (opt.value.useRuler) {
+    if (xRuler.value) {
+      xRuler.value.removeAllPositionLine();
+    }
+    if (yRuler.value) {
+      yRuler.value.removeAllPositionLine();
+    }
+  }
+}
 // 切换标尺隐藏或显示
-function toggleRuler() {}
-defineExpose({ reset });
+function toggleRuler(show: boolean = true) {
+  if (opt.value.useRuler) {
+    if (xRuler.value) {
+      xRuler.value.toggleRuler(show);
+    }
+    if (yRuler.value) {
+      yRuler.value.toggleRuler(show);
+    }
+  }
+}
+// 切换显示/隐藏定位线
+function togglePositionLine(show: boolean = true) {
+  if (opt.value.useRuler) {
+    if (xRuler.value) {
+      xRuler.value.togglePositionLine(show);
+    }
+    if (yRuler.value) {
+      yRuler.value.togglePositionLine(show);
+    }
+  }
+}
+
+/**
+ * 增加定位线
+ */
+function modifyAdsorptionList(
+  data: number | number[],
+  isAdd: boolean = true,
+  isY: boolean = false
+) {
+  if (opt.value.useRuler) {
+    if (isY && xRuler.value) {
+      xRuler.value.modifyAdsorptionList(data, isAdd);
+    }
+    if (!isY && yRuler.value) {
+      yRuler.value.modifyAdsorptionList(data, isAdd);
+    }
+  }
+}
+
+defineExpose({
+  reset,
+  changeScale,
+  removeAllPositionLine,
+  showRuler() {
+    toggleRuler();
+  },
+  hideRuler() {
+    toggleRuler(false);
+  },
+  showAllPositionLine() {
+    togglePositionLine();
+  },
+  hideAllPositionLine() {
+    togglePositionLine(false);
+  },
+  addAdsorptionLine(data: number | number[], isY: boolean = false) {
+    modifyAdsorptionList(data, true, isY);
+  },
+  removeAdsorptionLine(data: number | number[], isY: boolean = false) {
+    modifyAdsorptionList(data, false, isY);
+  }
+});
 </script>

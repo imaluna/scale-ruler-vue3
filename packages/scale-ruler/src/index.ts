@@ -1,4 +1,4 @@
-import ScaleRuler from './components/ScaleRuler.vue';
+import ScaleRuler from './components/index.vue';
 export type {
   ScaleRulerOption,
   PositionLineConfig,

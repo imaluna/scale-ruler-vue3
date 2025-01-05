@@ -8,7 +8,7 @@ import type {
   AnyRecord,
   RequiredScaleRulerOpt,
   ContainerInfo,
-  CanvasInfo
+  TransformInfo
 } from '@/type';
 const props = defineProps({
   containerInfo: {
@@ -19,8 +19,8 @@ const props = defineProps({
     type: Object as PropType<RequiredScaleRulerOpt>,
     required: true
   },
-  canvasInfo: {
-    type: Object as PropType<CanvasInfo>,
+  transformInfo: {
+    type: Object as PropType<TransformInfo>,
     required: true
   }
 });
@@ -33,9 +33,9 @@ const styles = computed((): AnyRecord => {
     height: props.opt?.canvasHeight + 'px',
     transition: 'transform 300ms',
     transformOrigin: '0 0',
-    transform: `translate(${props.canvasInfo.translateX}px, ${
-      props.canvasInfo.translateY
-    }px) scale(${props.canvasInfo.scale})`,
+    transform: `translate(${props.transformInfo.translateX}px, ${
+      props.transformInfo.translateY
+    }px) scale(${props.transformInfo.scale})`,
     ...props.opt.canvasStyle
   };
 });

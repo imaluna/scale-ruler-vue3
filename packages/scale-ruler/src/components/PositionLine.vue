@@ -22,7 +22,7 @@ import type {
 } from '@/type';
 import { coordinateToTranslate } from '@/utils';
 
-import { useMovePositionLine } from '@/hooks/useMovePositionLine';
+import { usePositionLineEvent } from '@/hooks/usePositionLineEvent';
 const props = defineProps({
   containerInfo: {
     type: Object as PropType<ContainerInfo>,
@@ -68,6 +68,7 @@ const wrapStyle = computed((): AnyRecord => {
     ? `translate(0, ${translate.value}px)`
     : `translate(${translate.value}px, 0)`;
   return {
+    display: lineInfo.value.show ? 'block' : 'none',
     position: 'absolute',
     width: (isY ? width : lineSize.value) + 'px',
     height: (isY ? lineSize.value : height) + 'px',
@@ -132,10 +133,13 @@ const tipStyle = computed((): AnyRecord => {
 });
 const positionLineRef = ref(null);
 const emit = defineEmits(['remove-position-line']);
+/**
+ * 删除定位线
+ */
 function remove(id: number | string) {
   emit('remove-position-line', id);
 }
-useMovePositionLine(
+usePositionLineEvent(
   opt,
   containerInfo,
   adsorptionList,

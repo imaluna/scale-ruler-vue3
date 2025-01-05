@@ -1,5 +1,6 @@
 <template>
   <canvas
+    v-show="showRuler"
     ref="rulerRef"
     :style="styles"
     :width="rulerInfo.width"
@@ -30,7 +31,6 @@ import type {
   AnyRecord,
   RequiredScaleRulerOpt,
   ContainerInfo,
-  CanvasInfo,
   TransformInfo
 } from '@/type';
 import { useAdsorption } from '@/hooks/useAdsorption';
@@ -43,10 +43,6 @@ const props = defineProps({
   },
   opt: {
     type: Object as PropType<RequiredScaleRulerOpt>,
-    required: true
-  },
-  canvasInfo: {
-    type: Object as PropType<CanvasInfo>,
     required: true
   },
   isY: {
@@ -78,15 +74,18 @@ const styles = computed((): AnyRecord => {
 });
 const rulerRef = ref();
 watch(
-  [() => props.containerInfo, () => props.canvasInfo],
+  [() => props.containerInfo, () => props.transformInfo],
   () => {
-    usePaintRuler(props.opt, props.canvasInfo, props.isY, rulerRef);
+    usePaintRuler(props.opt, props.transformInfo, props.isY, rulerRef);
   },
   {
     deep: true
   }
 );
-const { adsorptionList } = useAdsorption(props.opt, props.isY);
+const { adsorptionList, modifyAdsorptionList } = useAdsorption(
+  props.opt,
+  props.isY
+);
 const { positionLineMap } = useAddPositionLine(
   opt,
   containerInfo,
@@ -99,5 +98,35 @@ function handleRemove(id: number | string) {
   delete positionLineMap[id];
 }
 
+/**
+ * 删除所有定位线
+ */
+function removeAllPositionLine() {
+  Object.keys(positionLineMap).forEach((id) => {
+    handleRemove(id);
+  });
+}
 
+/**
+ * 切换所有定位线显示/隐藏
+ */
+function togglePositionLine(show: boolean = true) {
+  Object.keys(positionLineMap).forEach((id) => {
+    positionLineMap[id].show = show;
+  });
+}
+const showRuler = ref(true);
+/**
+ * 切换显示/隐藏标尺
+ */
+function toggleRuler(show: boolean = true) {
+  showRuler.value = show;
+  togglePositionLine(show);
+}
+defineExpose({
+  modifyAdsorptionList,
+  removeAllPositionLine,
+  togglePositionLine,
+  toggleRuler
+});
 </script>

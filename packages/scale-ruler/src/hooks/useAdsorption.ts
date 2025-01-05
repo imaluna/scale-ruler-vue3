@@ -14,6 +14,9 @@ export const useAdsorption = (opt: RequiredScaleRulerOpt, isY: boolean) => {
     if (!isAdd && index > -1) {
       adsorptionList.splice(index, 1);
     }
+    if (isAdd) {
+      adsorptionList.sort((a, b) => a - b);
+    }
   }
 
   function modifyAdsorptionList(
@@ -28,7 +31,6 @@ export const useAdsorption = (opt: RequiredScaleRulerOpt, isY: boolean) => {
   }
   function addAdsorptionList(data: number | number[]) {
     modifyAdsorptionList(data);
-    adsorptionList.sort((a, b) => a - b);
   }
   function removeAdsorptionList(data: number | number[]) {
     modifyAdsorptionList(data, false);
@@ -70,5 +72,5 @@ export const useAdsorption = (opt: RequiredScaleRulerOpt, isY: boolean) => {
       immediate: true
     }
   );
-  return { adsorptionList };
+  return { adsorptionList, modifyAdsorptionList };
 };

@@ -3,7 +3,6 @@ import type {
   RequiredScaleRulerOpt,
   TransformInfo,
   ContainerInfo,
-  RequiredCanvasInfo,
   BoundaryInfo
 } from '@/type';
 import { getBoundary } from './useSetBoundary';

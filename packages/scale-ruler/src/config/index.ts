@@ -22,12 +22,12 @@ export const defaultOpt: RequiredScaleRulerOpt = {
   containerXPadding: 80,
   containerYPadding: 80,
   canvasWidth: 1920,
-  canvasHeight: 2000,
+  canvasHeight: 1000,
   // 是否代理放大和缩小快捷键 ctrl+ "+" 和 ctrl + "-"
   proxyScaleKey: true,
   // 是否展示滚动条
   useScrollBar: true,
-  // 是否展示标尺
+  // 是否使用标尺
   useRuler: true,
   // 是否使用定位线
   usePositionLine: true,

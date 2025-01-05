@@ -6,10 +6,14 @@ import type {
   ContainerInfo,
   RequiredContainerInfo
 } from '@/type';
-import type { Reactive, Ref } from 'vue';
-import { getOffset, translateToCoordinate, checkAdSorptionLine } from '@/utils';
+import type { Ref } from 'vue';
+import {
+  translateToCoordinate,
+  checkAdSorptionLine,
+  coordinateToTranslate
+} from '@/utils';
 
-export const useMovePositionLine = (
+export const usePositionLineEvent = (
   opt: Ref<RequiredScaleRulerOpt>,
   containerInfo: Ref<ContainerInfo>,
   adsorptionList: Ref<number[]>,
@@ -49,6 +53,7 @@ export const useMovePositionLine = (
         toggleTip(true);
       });
       node.addEventListener('mouseleave', () => {
+        console.log({ isMouseDown });
         if (!isMouseDown) {
           toggleTip(false);
         }
@@ -59,12 +64,17 @@ export const useMovePositionLine = (
         lineInfo.value.showTip = true;
         const start = isY ? e.pageY : e.pageX;
         lineInfo.value.start = start;
-        lineInfo.value.startTranslate = lineInfo.value.translate;
+        lineInfo.value.startTranslate = coordinateToTranslate(
+          transformInfo.value,
+          lineInfo.value.coordinate,
+          isY
+        );
         lineInfo.value.needAnimate = false;
         document.addEventListener('mousemove', mouseMoveEvent);
       });
       document.addEventListener('mouseup', () => {
         if (!isMouseDown) return;
+        isMouseDown = false;
         const { translate, id } = lineInfo.value;
         const { width, height } = containerInfo.value as RequiredContainerInfo;
         const { xRulerHeight, yRulerWidth } = opt.value.rulerConfig;

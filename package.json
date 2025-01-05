@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:demo": "pnpm --filter ./packages/examples dev",
-    "build:demo": "pnpm run build:src && pnpm --filter ./packages/examples build",
+    "dev:examples": "pnpm --filter ./packages/examples dev",
+    "build:examples": "pnpm run build:src && pnpm --filter ./packages/examples build",
     "dev:src": "pnpm --filter ./packages/scale-ruler dev",
     "build:src": "pnpm --filter ./packages/scale-ruler build"
   },

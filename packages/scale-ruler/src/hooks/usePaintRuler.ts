@@ -1,17 +1,10 @@
-import { computed, onMounted, nextTick, watch } from 'vue';
-import type { Ref, ComputedRef } from 'vue';
-import type {
-  RequiredScaleRulerOpt,
-  RequiredContainerInfo,
-  ScrollBarInfo,
-  RequiredCanvasInfo,
-  ContainerInfo,
-  CanvasInfo
-} from '@/type';
+import { nextTick } from 'vue';
+import type { Ref } from 'vue';
+import type { RequiredScaleRulerOpt, TransformInfo } from '@/type';
 import { getGridSize } from '@/utils';
 export const usePaintRuler = (
   opt: RequiredScaleRulerOpt,
-  canvasInfo: CanvasInfo,
+  transform: TransformInfo,
   isY: boolean,
   rulerRef: Ref
 ) => {
@@ -37,7 +30,7 @@ export const usePaintRuler = (
           ? rulerConfig.yRulerWidth
           : rulerConfig.xRulerHeight;
         const { translateX, translateY, scale } =
-          canvasInfo as RequiredCanvasInfo;
+          transform as Required<TransformInfo>;
         const translate = isY ? translateY : translateX;
         const gridSize = getGridSize(scale);
         const gridPixel = gridSize * scale;

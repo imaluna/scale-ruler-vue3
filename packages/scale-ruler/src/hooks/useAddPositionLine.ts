@@ -43,7 +43,6 @@ export const useAddPositionLine = (
         isY
       );
       positionLineMap[currentId].showTip = showTip;
-      positionLineMap[currentId].translate = checkInfo.translate;
       positionLineMap[currentId].coordinate = checkInfo.coordinate;
     }
   }
@@ -57,7 +56,6 @@ export const useAddPositionLine = (
         const translate = start - (isY ? rulerOffset.top : rulerOffset.left);
         const lineInfo: AnyRecord = {
           startTranslate: translate,
-          translate: translate,
           start,
           id,
           coordinate: translateToCoordinate(
@@ -66,6 +64,7 @@ export const useAddPositionLine = (
             isY
           ),
           showTip: false,
+          show: true,
           needAnimate: false
         };
         currentId = id;
