@@ -20,8 +20,6 @@ export interface ScaleRulerOption {
   canvasStyle?: AnyRecord;
   scrollBarConfig?: ScrollBarConfig;
   rulerConfig?: RulerConfig;
-  onScale?: (scale: number) => void;
-  onMove?: (translateX: number, translateY: number) => void;
 }
 export interface PositionLineConfig {
   lineColor: string;

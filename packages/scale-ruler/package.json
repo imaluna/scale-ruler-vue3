@@ -1,17 +1,39 @@
 {
   "name": "scale-ruler-vue3",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.0-beta",
+  "description": "A vue3 public component, supporting free movement and scaling of the canvas within the area, and includes ruler, positioning line and adsorption line functions",
   "main": "lib/index.mjs",
   "module": "lib/index.mjs",
-  "jsnext:main":"lib/index.mjs",
-  "browser":"lib/index.umd.js",
+  "jsnext:main": "lib/index.mjs",
+  "browser": "lib/index.umd.js",
   "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/imaluna/scale-ruler-vue3"
+  },
   "scripts": {
     "dev": "vite build -w",
-    "build": "vite build"
+    "build": "vite build",
+    "publish": "npm run build &&  npm publish"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "lowcode",
+    "vue3",
+    "zoom",
+    "ruler",
+    "scale",
+    "typescript",
+    "canvas ruler"
+  ],
+  "author": "imaluna<https://github.com/imaluna/scale-ruler-vue3.git",
+  "homepage": "https://github.com/imaluna/scale-ruler-vue3#readme",
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
 }
