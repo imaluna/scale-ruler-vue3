@@ -25,7 +25,9 @@ export const useMouseWheel = (
   boundaryInfo: ComputedRef<BoundaryInfo>,
   container: Ref,
   scrollBarInfo: ComputedRef<ScrollBarInfo>,
-  globalInfo: Reactive<AnyRecord>
+  globalInfo: Reactive<AnyRecord>,
+  onScale: (scale: number) => void,
+  onMove: (translateX: number, translateY: number) => void
 ) => {
   let wheelTimer: number | null = null;
   Object.assign(globalInfo, {
@@ -43,7 +45,7 @@ export const useMouseWheel = (
           // 双指缩放事件
           const changeScale = (-1 * e.deltaY) / 100;
           const newScale = (transformInfo.scale as number) + changeScale;
-          useChangeScale(opt, containerInfo, transformInfo, newScale);
+          useChangeScale(opt, containerInfo, transformInfo, newScale, onScale);
         } else {
           // 单指移动事件
           if (!scrollBarInfo.value.isLarge || globalInfo.scrollBarMouseDown) {
@@ -90,6 +92,10 @@ export const useMouseWheel = (
           }
           // 不滚动后300ms隐藏滚动条
           if (scrollDirection) {
+            onMove(
+              transformInfo.translateX as number,
+              transformInfo.translateY as number
+            );
             wheelTimer = setTimeout(() => {
               if (globalInfo.scrollBarEnter) return;
               globalInfo[scrollDirection === 'y' ? 'yOpacity' : 'xOpacity'] = 0;

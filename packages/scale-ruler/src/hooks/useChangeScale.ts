@@ -13,7 +13,8 @@ export const useChangeScale = (
   opt: Ref<RequiredScaleRulerOpt>,
   containerInfo: ComputedRef<ContainerInfo>,
   transformInfo: Reactive<TransformInfo>,
-  newScale: number
+  newScale: number,
+  onScale: (scale: number) => void
 ) => {
   const _opt = opt.value;
   let { translateX, translateY, scale } =
@@ -39,4 +40,5 @@ export const useChangeScale = (
   transformInfo.scale = newScale;
   transformInfo.translateX = translateX;
   transformInfo.translateY = translateY;
+  onScale(newScale);
 };

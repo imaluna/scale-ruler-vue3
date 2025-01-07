@@ -10,7 +10,7 @@ A vue3 public component, an excellent assistant for building a low-code platform
 
 - vue3 components API
 - Support typescript
-- Supports shortcut key zoom(e.g. use  ctrl + '+' and ctrl + '-' to zoom) and mouse zoom
+- Supports shortcut key zoom(e.g. use  ctrl + '+' and ctrl + '-' to zoom) , mouse zoom and touchpad dual finger pinch zoom
 - Supports free movement and scroll bar movement
 - Easy and fast access
 
@@ -62,78 +62,83 @@ const opt = reactive({
 
 | Attribute | Description | Type | Default | Remark
 | --- | --- | --- | --- |--- |
-| scale/v-model:model	| 画布的缩放比例 | Number | 1| autoScale为true时，scale初始值不生效 |
-| minScale	| 画布缩放比例最小值 | Number | 0.1 ||
-| maxScale	| 画布缩放比例最大值 | Number | 10 ||
-| autoScale	| 初始化时是否自动计算画布缩放比例 | Boolean | true ||
-| canScale	| 是否允许缩放 | Boolean | true ||
-| autoCenter	| 初始化时是是否自动居中 | Boolean | true ||
-| containerAutoSize	| 是否自动计算容器的宽高 | Boolean | true |为true会监控container宽高变化并重新画布和标尺|
-| containerWidth	| 容器宽度 | Number | 1000 |containerAutoSize为true时该值不生效|
-| containerHeight	| 容器高度 | Number | 500 |containerAutoSize为true时该值不生效|
-| containerXPadding	| x方向/水平方向容器与画布之间的左右间距 | Number | 80 ||
-| containerYPadding	| y方向/垂直方向容器与画布之间的上下间距 | Number | 80 ||
-| canvasWidth	| 画布宽度 | Number | 1920 ||
-| canvasHeight	| 画布高度 | Number | 1000 ||
-| canvasStyle	| 画布样式 | Object | {} ||
-| proxyScaleKey	| 是否代理快捷键缩放 | Boolean | true |代理ctrl+ "+" 和 ctrl + "-"，可以放大、缩小画布|
-| useScrollBar	| 是否使用滚动条 | Boolean | true ||
-| scrollBarConfig	| 滚动条配置 | Object | {} | see scrollBarConfig params|
-| useRuler	| 是否使用标尺 | Boolean | true ||
-| rulerConfig	| 标尺配置 | Object | {} |see rulerConfig params|
-| usePositionLine	| 是否使用定位线 | Boolean | true ||
-| positionLineConfig	| 定位线配置 | Object | {} |see positionLineConfig params|
-| onScale	| 缩放回调 | Function(scale) | - ||
-| onMove	| 移动回调 | Function(translateX, translateY) | - ||
+| scale/v-model:model	| Scale ratio of canvas | Number | 1| If <code>autoScale</code> is true，The initial value of <code>scale</code> does not take effect |
+| minScale	| The minimum value of scale ratio of canvas | Number | 0.1 ||
+| maxScale	| The maximum value of scale ratio of canvas  | Number | 10 ||
+| autoScale	| Whether to automatically calculate the scale ratio of canvas during initialization | Boolean | true ||
+| canScale	| Whether scaling is allowed or not | Boolean | true ||
+| autoCenter	| Whether to automatically center the canvas during initialization| Boolean | true ||
+| containerAutoSize	| Whether to automatically calculate the width and height of the container | Boolean | true |If true, it will monitor the changes of container width and height and repaint the canvas and ruler|
+| containerWidth	| Container width | Number | 1000 |containerAutoSize为true时该值不生效|
+| containerHeight	| Container height | Number | 500 |containerAutoSize为true时该值不生效|
+| containerXPadding	| The left and right padding between the container and the canvas in the x-direction/horizontal direction | Number | 80 ||
+| containerYPadding	| The top and bottom padding between the container and the canvas in the y-direction/vertical direction  | Number | 80 ||
+| canvasWidth	| Canvas width | Number | 1920 ||
+| canvasHeight	| Canvas height | Number | 1000 ||
+| canvasStyle	| The style of canvas | Object | {} ||
+| proxyScaleKey	| Whether to proxy the shortcut key zoom function or not | Boolean | true | proxy ctrl+ "+" to  zoom in  and ctrl + "-" to zoom out|
+| useScrollBar	| Whether to use scrollbar | Boolean | true ||
+| scrollBarConfig	| The config of scrollbar | Object | {} | see scrollBarConfig params|
+| useRuler	| Whether to use ruler | Boolean | true ||
+| rulerConfig	| The config of ruler | Object | {} |see rulerConfig params|
+| usePositionLine	| Whether to use position line | Boolean | true ||
+| positionLineConfig	| The config of position line | Object | {} |see positionLineConfig params|
+
 
 
 ### scrollBarConfig params
 
 | Attribute | Description | Type | Default | Remark
 | --- | --- | --- | --- |--- |
-| bgColor	| 背景色 | String | #000000| |
-| opacity	| 透明度 | Number | 0.4| |
-| zIndex	| 滚动条堆叠顺序 | Number | 500| |
-| size	| 水平滚动条的高度或垂直滚动条的宽度 | Number | 8| |
+| bgColor	| background color | String | #000000| |
+| opacity	| opacity | Number | 0.4| |
+| zIndex	| zIndex | Number | 500| |
+| size	| The height of horizontal scrollbar and the width of vertical scrollbar | Number | 8| |
 
 ### rulerConfig params
 
 | Attribute | Description | Type | Default | Remark
 | --- | --- | --- | --- |--- |
-| xRulerHeight	| x/水平标尺的高度 | Number | 30|不要超过containerYPadding |
-| yRulerWidth	| y/垂直标尺的宽度 | Number | 30|不要超过containerXPadding |
-| bgColor	| 背景色 | String | #efefef| |
-| fontColor	| 标尺数值的颜色 | String | #000000| |
-| fontSize	| 标尺数值的字体大小 | Number | 12| |
-| fontFamily	| 标尺数值的字体 |String | Arial| |
-| lineColor	| 标尺刻度颜色 |String | #000000| |
-| zIndex	| 标尺堆叠顺序 | Number | 400| |
+| xRulerHeight	| The height of x/horizontal ruler | Number | 30|Do not bigger than the <code>containerYPadding</code> |
+| yRulerWidth	| The width of y/vertical ruler | Number | 30|Do not bigger than <code>containerXPadding</code> |
+| bgColor	| Background color of ruler | String | #efefef| |
+| fontColor	| The color of number in ruler | String | #000000| |
+| fontSize	| The font size of number in ruler | Number | 12| |
+| fontFamily	| The font family of number in ruler |String | Arial| |
+| lineColor	| The line color of ruler |String | #000000| |
+| zIndex	| zIndex | Number | 400| |
 
 ### positionLineConfig params
 
 | Attribute | Description | Type | Default | Remark
 | --- | --- | --- | --- |--- |
-| lineColor	| 定位线的颜色 | String | #24aa61| |
-| padding	| 定位线操作上下间距 | Number | 3| |
-| adsorptionXList	| x/水平方向吸附线 |Array<Number> | [0, canvasWidth]| |
-| adsorptionYList	| y/垂直方向吸附线 |Array<Number> | [0, canvasHeight]| |
-| adsorptionGap	| 吸附距离 | Number | 4| |
-| zIndex	| 堆叠顺序 | Number | 300| |
+| lineColor	| The color of position line | String | #24aa61| |
+| padding	| The padding of operation  | Number | 3| |
+| adsorptionXList	| The list of adsorption in x/horizontal direction |Array<Number> | [0, canvasWidth]| |
+| adsorptionYList	| The list of adsorption in y/vertical direction |Array<Number> | [0, canvasHeight]| |
+| adsorptionGap	| The gap to adsorb | Number | 4| |
+| zIndex	| zIndex | Number | 300| |
 
+## Events
+
+| Methods Name	 | Description | Parameters
+| --- | --- | --- |
+| onScale	| triggers when scaling the canvas | scale | 
+| onMove	| triggers when moving the canvas | translateX, translateY |
 
 ## Methods
 
 | Methods Name	 | Description | Parameters
 | --- | --- | --- |
-| reset	| 还原画布 | - | 
-| changeScale	| 改变缩放比例 | (scale:number 缩放比例) | 
-| removeAllPositionLine	| 删除所有定位线 | - | 
-| showRuler	| 显示标尺 | - | 
-| hideRuler	| 隐藏标尺 | - | 
-| showAllPositionLine	| 显示所有定位线 | - | 
-| hideAllPositionLine	| 隐藏所有定位线 | - | 
-| addAdsorptionLine	| 增加吸附线 | (data: number | Array<number> 吸附线的值，可为数组或数值, isY: boolean 是否为y/垂直方向吸附线) | 
-| removeAdsorptionLine	| 删除吸附线 | (data: number | Array<number> 吸附线的值，可为数组或数值, isY: boolean 是否为y/垂直方向吸附线) | 
+| reset	| reset the canvas | - | 
+| changeScale	| change the scale ratio of canvas | (scale:number 缩放比例) | 
+| removeAllPositionLine	| remove all the position line(s) | - | 
+| showRuler	| show rulers | - | 
+| hideRuler	| hide rulers | - | 
+| showAllPositionLine	| show all the position line(s)   | - | 
+| hideAllPositionLine	| hide all the position line(s) | - | 
+| addAdsorptionLine	| add adsorption line(s) | (data: number \| Array<number>- the value of adsorption line, isY: boolean -Whether it is in the y/vertical direction) | 
+| removeAdsorptionLine	| remove adsorption line(s)  | (data: number \| Array<number>- the value of adsorption line, isY: boolean -Whether it is in the y/vertical direction)| 
 
 
 

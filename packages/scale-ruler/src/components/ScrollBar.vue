@@ -38,6 +38,7 @@ const props = defineProps({
     required: true
   }
 });
+const emit = defineEmits(['onMove']);
 const { globalInfo, transformInfo } = toRefs(props);
 const styles = computed((): AnyRecord => {
   const { opt, scrollBarInfo, isY } = props;
@@ -86,6 +87,11 @@ function mousemoveEvent(e: MouseEvent) {
     translateX = props.opt.containerXPadding - left;
     transformInfo.value.translateX = translateX;
   }
+  emit(
+    'onMove',
+    transformInfo.value.translateX,
+    transformInfo.value.translateY
+  );
 }
 onMounted(() => {
   if (scrollBarRef.value) {

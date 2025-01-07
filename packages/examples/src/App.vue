@@ -23,6 +23,8 @@
         :canvas-height="opt.canvasHeight"
         :container-auto-size="true"
         :canvas-style="opt.canvasStyle"
+        @onScale="console.log"
+        @onMove="console.log"
       ></ScaleRuler>
       <footer>我是底部</footer>
     </main>

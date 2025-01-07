@@ -14,8 +14,12 @@ hideAllPositionLine(): void;
 addAdsorptionLine(data: number | number[], isY?: boolean): void;
 removeAdsorptionLine(data: number | number[], isY?: boolean): void;
 }, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
+onScale: (...args: any[]) => void;
+onMove: (...args: any[]) => void;
 "update:scale": (...args: any[]) => void;
 }, string, PublicProps, Readonly<ScaleRulerOption> & Readonly<{
+onOnScale?: ((...args: any[]) => any) | undefined;
+onOnMove?: ((...args: any[]) => any) | undefined;
 "onUpdate:scale"?: ((...args: any[]) => any) | undefined;
 }>, {
 scale: number;

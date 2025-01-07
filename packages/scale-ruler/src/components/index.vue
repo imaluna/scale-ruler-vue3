@@ -29,6 +29,7 @@
       :scroll-bar-info="scrollBarInfo"
       :global-info="globalInfo"
       :transform-info="transformInfo"
+      @onMove="onMove"
     />
     <ScrollBar
       v-if="scrollBarInfo.isYLarge"
@@ -37,6 +38,7 @@
       :scroll-bar-info="scrollBarInfo"
       :global-info="globalInfo"
       :transform-info="transformInfo"
+      @onMove="onMove"
       is-y
     />
   </div>
@@ -66,7 +68,7 @@ const props = withDefaults(defineProps<ScaleRulerOption>(), defaultProps);
 const opt = ref<RequiredScaleRulerOpt>(
   deepmerge(defaultOpt, props) as RequiredScaleRulerOpt
 );
-const emit = defineEmits(['update:scale']);
+const emit = defineEmits(['update:scale', 'onScale', 'onMove']);
 
 const container = ref(null);
 const { containerInfo, containerStyle } = useContainer(opt, container);
@@ -106,8 +108,16 @@ watch(
     deep: true
   }
 );
+
+function onScale(scale: number) {
+  emit('onScale', scale);
+}
+function onMove(translateX: number, translateY: number) {
+  emit('onMove', translateX, translateY);
+}
+// 改变尺寸
 function changeScale(scale: number) {
-  useChangeScale(opt, containerInfo, transformInfo, scale);
+  useChangeScale(opt, containerInfo, transformInfo, scale, onScale);
 }
 watch(
   () => opt.value.scale,
@@ -129,7 +139,9 @@ useMouseWheel(
   boundaryInfo,
   container,
   scrollBarInfo,
-  globalInfo
+  globalInfo,
+  onScale,
+  onMove
 );
 
 // 还原
