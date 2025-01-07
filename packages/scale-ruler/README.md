@@ -69,8 +69,8 @@ const opt = reactive({
 | canScale	| Whether scaling is allowed or not | Boolean | true ||
 | autoCenter	| Whether to automatically center the canvas during initialization| Boolean | true ||
 | containerAutoSize	| Whether to automatically calculate the width and height of the container | Boolean | true |If true, it will monitor the changes of container width and height and repaint the canvas and ruler|
-| containerWidth	| Container width | Number | 1000 |containerAutoSize为true时该值不生效|
-| containerHeight	| Container height | Number | 500 |containerAutoSize为true时该值不生效|
+| containerWidth	| Container width | Number | 1000 |If <code>containerAutoSize</code> is true, this value does not take effect |
+| containerHeight	| Container height | Number | 500 |If <code>containerAutoSize</code> is true, this value does not take effect|
 | containerXPadding	| The left and right padding between the container and the canvas in the x-direction/horizontal direction | Number | 80 ||
 | containerYPadding	| The top and bottom padding between the container and the canvas in the y-direction/vertical direction  | Number | 80 ||
 | canvasWidth	| Canvas width | Number | 1920 ||
@@ -131,7 +131,7 @@ const opt = reactive({
 | Methods Name	 | Description | Parameters
 | --- | --- | --- |
 | reset	| reset the canvas | - | 
-| changeScale	| change the scale ratio of canvas | (scale:number 缩放比例) | 
+| changeScale	| change the scale ratio of canvas | (scale:number) | 
 | removeAllPositionLine	| remove all the position line(s) | - | 
 | showRuler	| show rulers | - | 
 | hideRuler	| hide rulers | - | 
