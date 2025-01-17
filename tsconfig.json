@@ -8,7 +8,10 @@
       "path": "./packages/scale-ruler/tsconfig.json"
     },
     {
-      "path": "./examples/tsconfig.json"
+      "path": "./packages/examples/tsconfig.json"
+    },
+    {
+      "path": "./packages/common/tsconfig.json"
     }
   ]
 }

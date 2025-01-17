@@ -1,11 +1,21 @@
 import { reactive, watch, computed } from 'vue';
 import type { RequiredScaleRulerOpt } from '@/type';
-
+import type { Ref } from 'vue';
+import { sortByAsc } from '@/utils';
 /**
  * 吸附线
  */
-export const useAdsorption = (opt: RequiredScaleRulerOpt, isY: boolean) => {
-  const adsorptionList = reactive<number[]>([0]);
+export const useAdsorption = (
+  opt: Ref<RequiredScaleRulerOpt>,
+  isY: boolean,
+  updateList: (value: number[]) => void
+) => {
+  const originList = computed(() =>
+    opt.value[isY ? 'adsorptionYList' : 'adsorptionXList'].sort()
+  );
+  const adsorptionList = reactive<number[]>([]);
+  addAdsorptionList(0);
+  addAdsorptionList(originList.value);
   function modifyAdsorption(num: number, isAdd: boolean = true) {
     const index = adsorptionList.indexOf(num);
     if (isAdd && index === -1) {
@@ -15,7 +25,7 @@ export const useAdsorption = (opt: RequiredScaleRulerOpt, isY: boolean) => {
       adsorptionList.splice(index, 1);
     }
     if (isAdd) {
-      adsorptionList.sort((a, b) => a - b);
+      sortByAsc(adsorptionList);
     }
   }
 
@@ -28,6 +38,7 @@ export const useAdsorption = (opt: RequiredScaleRulerOpt, isY: boolean) => {
     } else {
       modifyAdsorption(data, isAdd);
     }
+    updateList(adsorptionList);
   }
   function addAdsorptionList(data: number | number[]) {
     modifyAdsorptionList(data);
@@ -35,27 +46,24 @@ export const useAdsorption = (opt: RequiredScaleRulerOpt, isY: boolean) => {
   function removeAdsorptionList(data: number | number[]) {
     modifyAdsorptionList(data, false);
   }
-
-  const originAdsorptionList = computed(
-    () => opt.positionLineConfig[isY ? 'adsorptionYList' : 'adsorptionXList']
-  );
-  /**
-   * 吸附线变化
-   */
   watch(
-    () => originAdsorptionList.value,
-    (newVal) => {
+    () => originList.value,
+    (newVal, oldVal) => {
+      sortByAsc(newVal);
+      if (newVal.join(',') === sortByAsc(adsorptionList).join(',')) {
+        return;
+      }
+      if (oldVal?.length > 0) {
+        removeAdsorptionList(oldVal);
+      }
       addAdsorptionList(newVal);
-    },
-    {
-      deep: true
     }
   );
   /**
    * 画布尺寸
    */
   const canvasSize = computed((): number =>
-    !isY ? opt.canvasHeight : opt.canvasWidth
+    !isY ? opt.value.canvasWidth : opt.value.canvasHeight
   );
   /**
    * 画布尺寸变化

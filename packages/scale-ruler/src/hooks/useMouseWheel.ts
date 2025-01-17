@@ -45,7 +45,7 @@ export const useMouseWheel = (
           // 双指缩放事件
           const changeScale = (-1 * e.deltaY) / 100;
           const newScale = (transformInfo.scale as number) + changeScale;
-          useChangeScale(opt, containerInfo, transformInfo, newScale, onScale);
+          useChangeScale(opt, containerInfo, transformInfo, newScale, onScale, onMove);
         } else {
           // 单指移动事件
           if (!scrollBarInfo.value.isLarge || globalInfo.scrollBarMouseDown) {

@@ -12,6 +12,7 @@ import {
   checkAdSorptionLine,
   coordinateToTranslate
 } from '@/utils';
+import { bindMouseMove } from 'common';
 
 export const usePositionLineEvent = (
   opt: Ref<RequiredScaleRulerOpt>,
@@ -27,7 +28,7 @@ export const usePositionLineEvent = (
   function toggleTip(show: boolean) {
     lineInfo.value.showTip = show;
   }
-  function mouseMoveEvent(e: MouseEvent) {
+  function mousemoveEvent(e: MouseEvent) {
     if (!isMouseDown) return;
     const move = (isY ? e.pageY : e.pageX) - lineInfo.value.start;
     const translate = lineInfo.value.startTranslate + move;
@@ -45,6 +46,43 @@ export const usePositionLineEvent = (
       isY
     );
     lineInfo.value.coordinate = checkInfo.coordinate;
+    lineInfo.value.translate = checkInfo.translate;
+  }
+  function mousedownEvent(e: MouseEvent) {
+    isMouseDown = true;
+    lineInfo.value.showTip = true;
+    const start = isY ? e.pageY : e.pageX;
+    lineInfo.value.start = start;
+    lineInfo.value.startTranslate = coordinateToTranslate(
+      transformInfo.value,
+      lineInfo.value.coordinate,
+      isY
+    );
+  }
+  function mouseupEvent() {
+    if (!isMouseDown) return;
+    isMouseDown = false;
+    const { translate, id } = lineInfo.value;
+    const { width, height } = containerInfo.value as RequiredContainerInfo;
+    const { xRulerHeight, yRulerWidth } = opt.value.rulerConfig;
+    if (
+      translate <= (isY ? xRulerHeight : yRulerWidth) ||
+      translate >= (isY ? height : width)
+    ) {
+      removeCallback(id);
+    } else {
+      toggleTip(false);
+      const checkInfo = checkAdSorptionLine(
+        adsorptionList.value,
+        transformInfo.value,
+        opt.value.positionLineConfig.adsorptionGap,
+        translate,
+        lineInfo.value.coordinate,
+        isY
+      );
+      lineInfo.value.coordinate = checkInfo.coordinate;
+      lineInfo.value.translate = checkInfo.translate;
+    }
   }
   onMounted(() => {
     if (positionLineRef.value) {
@@ -53,42 +91,12 @@ export const usePositionLineEvent = (
         toggleTip(true);
       });
       node.addEventListener('mouseleave', () => {
-        console.log({ isMouseDown });
         if (!isMouseDown) {
           toggleTip(false);
         }
       });
-      node.addEventListener('mousedown', (e: MouseEvent) => {
-        e.preventDefault();
-        isMouseDown = true;
-        lineInfo.value.showTip = true;
-        const start = isY ? e.pageY : e.pageX;
-        lineInfo.value.start = start;
-        lineInfo.value.startTranslate = coordinateToTranslate(
-          transformInfo.value,
-          lineInfo.value.coordinate,
-          isY
-        );
-        lineInfo.value.needAnimate = false;
-        document.addEventListener('mousemove', mouseMoveEvent);
-      });
-      document.addEventListener('mouseup', () => {
-        if (!isMouseDown) return;
-        isMouseDown = false;
-        const { translate, id } = lineInfo.value;
-        const { width, height } = containerInfo.value as RequiredContainerInfo;
-        const { xRulerHeight, yRulerWidth } = opt.value.rulerConfig;
-        if (
-          translate <= (isY ? xRulerHeight : yRulerWidth) ||
-          translate >= (isY ? height : width)
-        ) {
-          removeCallback(id);
-        } else {
-          toggleTip(false);
-          lineInfo.value.needAnimate = true;
-        }
-        document.removeEventListener('mousemove', mouseMoveEvent);
-      });
+
+      bindMouseMove(node, mousedownEvent, mousemoveEvent, mouseupEvent);
     }
   });
 };

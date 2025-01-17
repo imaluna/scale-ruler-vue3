@@ -76,8 +76,7 @@ const wrapStyle = computed((): AnyRecord => {
     top: (!isY ? 0 : -padding.value) + 'px',
     left: (!isY ? -padding.value : 0) + 'px',
     transform,
-    zIndex: props.opt.positionLineConfig.zIndex,
-    transition: lineInfo.value.needAnimate ? 'transform 300ms' : ''
+    zIndex: props.opt.positionLineConfig.zIndex
   };
 });
 

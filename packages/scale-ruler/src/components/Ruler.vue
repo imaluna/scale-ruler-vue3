@@ -82,9 +82,14 @@ watch(
     deep: true
   }
 );
+const emit = defineEmits(['update-adsorption-list']);
+function updateList(value: number[]) {
+  emit('update-adsorption-list', value, !props.isY);
+}
 const { adsorptionList, modifyAdsorptionList } = useAdsorption(
-  props.opt,
-  props.isY
+  opt,
+  !props.isY,
+  updateList
 );
 const { positionLineMap } = useAddPositionLine(
   opt,
@@ -123,10 +128,17 @@ function toggleRuler(show: boolean = true) {
   showRuler.value = show;
   togglePositionLine(show);
 }
+function getPositionLineList(): number[] {
+  return positionLineMap
+    .filter((item: AnyRecord) => !!item)
+    .map((item: AnyRecord) => item.coordinate as number)
+    .sort((a: number, b: number) => a - b);
+}
 defineExpose({
   modifyAdsorptionList,
   removeAllPositionLine,
   togglePositionLine,
-  toggleRuler
+  toggleRuler,
+  getPositionLineList
 });
 </script>

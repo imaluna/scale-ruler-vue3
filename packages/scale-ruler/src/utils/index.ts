@@ -1,5 +1,5 @@
 import type { AnyRecord, TransformInfo } from '@/type';
-
+import type { Reactive } from 'vue';
 /**
  * 设置样式
  */
@@ -60,7 +60,7 @@ export const coordinateToTranslate = (
  * 检查吸附线
  */
 export function checkAdSorptionLine(
-  adsorptionList: number[],
+  adsorptionList: Reactive<number[]>,
   transformInfo: TransformInfo,
   adsorptionGap: number,
   translate: number,
@@ -73,7 +73,10 @@ export function checkAdSorptionLine(
     let start = 0;
     while (start < len) {
       const value = adsorptionList[start];
-      if (Math.abs(coordinate - value) <= adsorptionGap) {
+      if (
+        Math.abs(coordinate - value) <=
+        Math.max(adsorptionGap, adsorptionGap / (transformInfo.scale as number))
+      ) {
         // 可以吸附
         res.coordinate = value;
         res.translate = coordinateToTranslate(transformInfo, value, isY);
@@ -87,4 +90,11 @@ export function checkAdSorptionLine(
     }
   }
   return res;
+}
+export function arrayMerge<T>(target: T[], source: T[]): T[] {
+  return source;
+}
+
+export function sortByAsc(arr: number[]) {
+  return arr.sort((a, b) => a - b);
 }

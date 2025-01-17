@@ -14,11 +14,15 @@ export const useChangeScale = (
   containerInfo: ComputedRef<ContainerInfo>,
   transformInfo: Reactive<TransformInfo>,
   newScale: number,
-  onScale: (scale: number) => void
+  onScale: (scale: number) => void,
+  onMove: (translateX: number, translateY: number) => void
 ) => {
   const _opt = opt.value;
+  if (!_opt.canScale) return;
   let { translateX, translateY, scale } =
     transformInfo as Required<TransformInfo>;
+  let originX = translateX;
+  let originY = translateY;
   newScale = Math.min(Math.max(newScale, _opt.minScale), _opt.maxScale);
   const change = newScale - scale;
   const boundary = getBoundary(
@@ -41,4 +45,7 @@ export const useChangeScale = (
   transformInfo.translateX = translateX;
   transformInfo.translateY = translateY;
   onScale(newScale);
+  if (originX !== translateX || originY !== translateY) {
+    onMove(translateX, translateY);
+  }
 };

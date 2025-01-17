@@ -1,5 +1,37 @@
-import { defineComponent as W, computed as M, openBlock as _, createElementBlock as E, normalizeStyle as X, toRefs as K, ref as j, onMounted as A, nextTick as te, reactive as T, watch as P, createElementVNode as D, toDisplayString as ne, unref as w, Fragment as k, withDirectives as oe, vShow as re, normalizeClass as ae, renderList as ie, createBlock as q, createCommentVNode as I, mergeDefaults as se, createVNode as H, withCtx as le, renderSlot as ce } from "vue";
-const ue = /* @__PURE__ */ W({
+import { defineComponent as H, computed as j, openBlock as Y, createElementBlock as P, normalizeStyle as E, renderSlot as re, toRefs as U, ref as B, onMounted as W, nextTick as ie, reactive as A, watch as T, createElementVNode as $, toDisplayString as se, unref as R, Fragment as N, withDirectives as le, vShow as ce, normalizeClass as ue, renderList as fe, createBlock as F, createCommentVNode as z, createVNode as k, withCtx as de } from "vue";
+const pe = (i) => i <= 0.25 ? 40 : i <= 0.5 ? 20 : i <= 1 ? 10 : i <= 2 ? 5 : i <= 4 ? 2 : 1, ve = (i) => {
+  const y = i.getBoundingClientRect(), t = y.top + (document.body.scrollTop || document.documentElement.scrollTop), r = y.left + (document.body.scrollLeft || document.documentElement.scrollLeft);
+  return { top: t, left: r };
+}, K = (i, y, t) => {
+  const { scale: r, translateX: e, translateY: u } = i;
+  return (y - (t ? u : e)) / r;
+}, G = (i, y, t) => {
+  const { scale: r, translateX: e, translateY: u } = i, l = y * r;
+  return (t ? u : e) + l;
+};
+function I(i, y, t, r, e, u) {
+  const l = { coordinate: e, translate: r }, a = i.length;
+  if (a > 0) {
+    let o = 0;
+    for (; o < a; ) {
+      const f = i[o];
+      if (Math.abs(e - f) <= Math.max(t, t / y.scale)) {
+        l.coordinate = f, l.translate = G(y, f, u);
+        break;
+      } else if (f > e)
+        break;
+      o++;
+    }
+  }
+  return l;
+}
+function V(i, y) {
+  return y;
+}
+function D(i) {
+  return i.sort((y, t) => y - t);
+}
+const he = /* @__PURE__ */ H({
   __name: "CanvasPanel",
   props: {
     containerInfo: {
@@ -15,27 +47,40 @@ const ue = /* @__PURE__ */ W({
       required: !0
     }
   },
-  setup(l) {
-    const g = l, e = M(() => {
-      var f, t;
+  setup(i) {
+    const y = i, t = j(() => {
+      var r, e;
       return {
         position: "absolute",
         left: 0,
         top: 0,
-        width: ((f = g.opt) == null ? void 0 : f.canvasWidth) + "px",
-        height: ((t = g.opt) == null ? void 0 : t.canvasHeight) + "px",
-        transition: "transform 300ms",
+        width: ((r = y.opt) == null ? void 0 : r.canvasWidth) + "px",
+        height: ((e = y.opt) == null ? void 0 : e.canvasHeight) + "px",
         transformOrigin: "0 0",
-        transform: `translate(${g.transformInfo.translateX}px, ${g.transformInfo.translateY}px) scale(${g.transformInfo.scale})`,
-        ...g.opt.canvasStyle
+        transform: `translate(${y.transformInfo.translateX}px, ${y.transformInfo.translateY}px) scale(${y.transformInfo.scale})`,
+        ...y.opt.canvasStyle
       };
     });
-    return (f, t) => (_(), E("div", {
+    return (r, e) => (Y(), P("div", {
       ref: "canvasPanel",
-      style: X(e.value)
-    }, null, 4));
+      style: E(t.value)
+    }, [
+      re(r.$slots, "default")
+    ], 4));
   }
-}), U = /* @__PURE__ */ W({
+});
+function J(i, y, t, r) {
+  if (!i) return;
+  function e(u) {
+    u.preventDefault(), typeof t == "function" && t(u);
+  }
+  i.addEventListener("mousedown", (u) => {
+    u.button === 0 && (u.preventDefault(), typeof y == "function" && y(u), document.addEventListener("mousemove", e));
+  }), document.addEventListener("mouseup", (u) => {
+    document.removeEventListener("mousemove", e), typeof r == "function" && r(u);
+  });
+}
+const ee = /* @__PURE__ */ H({
   __name: "ScrollBar",
   props: {
     containerInfo: {
@@ -64,258 +109,261 @@ const ue = /* @__PURE__ */ W({
     }
   },
   emits: ["onMove"],
-  setup(l, { emit: g }) {
-    const e = l, f = g, { globalInfo: t, transformInfo: h } = K(e), s = M(() => {
-      const { opt: u, scrollBarInfo: o, isY: v } = e, { scrollBarConfig: i } = u, m = {
+  setup(i, { emit: y }) {
+    const t = i, r = y, { globalInfo: e, transformInfo: u } = U(t), l = j(() => {
+      const { opt: h, scrollBarInfo: n, isY: m } = t, { scrollBarConfig: b } = h, L = {
         position: "absolute",
         borderRadius: "4px",
-        backgroundColor: i.bgColor,
-        opacity: e.globalInfo[v ? "yOpacity" : "xOpacity"] || 0,
+        backgroundColor: b.bgColor,
+        opacity: t.globalInfo[m ? "yOpacity" : "xOpacity"] || 0,
         transition: "opacity 300ms",
         cursor: "pointer",
-        zIndex: i.zIndex,
-        width: (v ? i.barSize : o.width) + "px",
-        height: (v ? o.height : i.barSize) + "px"
+        zIndex: b.zIndex,
+        width: (m ? b.barSize : n.width) + "px",
+        height: (m ? n.height : b.barSize) + "px"
       };
-      return v ? (m.top = o.top + "px", m.right = 0) : (m.left = o.left + "px", m.bottom = 0), m;
-    }), c = j(null), a = {};
-    function n(u) {
-      if (u.preventDefault(), !t.value.scrollBarMouseDown) return;
-      let { translateX: o, translateY: v } = h.value;
-      const i = e.scrollBarInfo, { width: m, height: b } = e.containerInfo;
-      if (e.isY) {
-        const L = u.pageY - a.startY;
-        let r = a.top + L;
-        r = Math.min(Math.max(0, r), b - i.height);
-        const d = r * i.totalHeight / b;
-        v = e.opt.containerYPadding - d, h.value.translateY = v;
+      return m ? (L.top = n.top + "px", L.right = 0) : (L.left = n.left + "px", L.bottom = 0), L;
+    }), a = B(null), o = {};
+    function f(h) {
+      if (h.preventDefault(), !e.value.scrollBarMouseDown) return;
+      let { translateX: n, translateY: m } = u.value;
+      const b = t.scrollBarInfo, { width: L, height: s } = t.containerInfo;
+      if (t.isY) {
+        const g = h.pageY - o.startY;
+        let c = o.top + g;
+        c = Math.min(Math.max(0, c), s - b.height);
+        const x = c * b.totalHeight / s;
+        m = t.opt.containerYPadding - x, u.value.translateY = m;
       } else {
-        const L = u.pageX - a.startX;
-        let r = a.left + L;
-        r = Math.min(Math.max(0, r), m - i.width);
-        const d = r * i.totalWidth / m;
-        o = e.opt.containerXPadding - d, h.value.translateX = o;
+        const g = h.pageX - o.startX;
+        let c = o.left + g;
+        c = Math.min(Math.max(0, c), L - b.width);
+        const x = c * b.totalWidth / L;
+        n = t.opt.containerXPadding - x, u.value.translateX = n;
       }
-      f(
+      r(
         "onMove",
-        h.value.translateX,
-        h.value.translateY
+        u.value.translateX,
+        u.value.translateY
       );
     }
-    return A(() => {
-      if (c.value) {
-        const u = c.value, o = e.isY ? "yOpacity" : "xOpacity";
-        u.addEventListener("mouseenter", () => {
-          t.value[o] = e.opt.scrollBarConfig.opacity, t.value[e.isY ? "xOpacity" : "yOpacity"] = 0, t.value.scrollBarEnter = !0;
-        }), u.addEventListener("mouseleave", () => {
-          t.value.scrollBarMouseDown || (t.value.scrollBarEnter = !1, t.value[o] = 0);
-        }), u.addEventListener("mousedown", (v) => {
-          v.preventDefault(), t.value.scrollBarMouseDown = !0, a.startX = v.pageX, a.startY = v.pageY, a.left = e.scrollBarInfo.left, a.top = e.scrollBarInfo.top, document.addEventListener("mousemove", n);
-        }), document.addEventListener("mouseup", () => {
-          t.value.scrollBarMouseDown && (t.value.scrollBarMouseDown = !1, document.removeEventListener("mousemove", n));
-        });
+    function d(h) {
+      e.value.scrollBarMouseDown = !0, o.startX = h.pageX, o.startY = h.pageY, o.left = t.scrollBarInfo.left, o.top = t.scrollBarInfo.top;
+    }
+    function v() {
+      e.value.scrollBarMouseDown && (e.value.scrollBarMouseDown = !1);
+    }
+    return W(() => {
+      if (a.value) {
+        const h = a.value, n = t.isY ? "yOpacity" : "xOpacity";
+        h.addEventListener("mouseenter", () => {
+          e.value[n] = t.opt.scrollBarConfig.opacity, e.value[t.isY ? "xOpacity" : "yOpacity"] = 0, e.value.scrollBarEnter = !0;
+        }), h.addEventListener("mouseleave", () => {
+          e.value.scrollBarMouseDown || (e.value.scrollBarEnter = !1, e.value[n] = 0);
+        }), J(h, d, f, v);
       }
-    }), (u, o) => (_(), E("div", {
+    }), (h, n) => (Y(), P("div", {
       ref_key: "scrollBarRef",
-      ref: c,
-      style: X(s.value)
+      ref: a,
+      style: E(l.value)
     }, null, 4));
   }
-}), fe = (l) => l <= 0.25 ? 40 : l <= 0.5 ? 20 : l <= 1 ? 10 : l <= 2 ? 5 : l <= 4 ? 2 : 1, de = (l) => {
-  const g = l.getBoundingClientRect(), e = g.top + (document.body.scrollTop || document.documentElement.scrollTop), f = g.left + (document.body.scrollLeft || document.documentElement.scrollLeft);
-  return { top: e, left: f };
-}, $ = (l, g, e) => {
-  const { scale: f, translateX: t, translateY: h } = l;
-  return (g - (e ? h : t)) / f;
-}, N = (l, g, e) => {
-  const { scale: f, translateX: t, translateY: h } = l, s = g * f;
-  return (e ? h : t) + s;
-};
-function Z(l, g, e, f, t, h) {
-  const s = { coordinate: t, translate: f }, c = l.length;
-  if (c > 0) {
-    let a = 0;
-    for (; a < c; ) {
-      const n = l[a];
-      if (Math.abs(t - n) <= e) {
-        s.coordinate = n, s.translate = N(g, n, h);
-        break;
-      } else if (n > t)
-        break;
-      a++;
-    }
-  }
-  return s;
-}
-const pe = (l, g, e, f) => {
-  te(() => {
-    const t = f.value;
-    if (t) {
-      const h = t.offsetWidth, s = t.offsetHeight, { rulerConfig: c } = l, { bgColor: a, fontFamily: n, fontSize: u, lineColor: o, fontColor: v } = c;
-      if (h > 0 && s > 0) {
-        const i = t.getContext("2d");
-        i.clearRect(0, 0, h, s), a && (i.save(), i.fillStyle = a, i.fillRect(0, 0, h, s), i.restore());
-        const m = e ? c.yRulerWidth : c.xRulerHeight, { translateX: b, translateY: L, scale: r } = g, d = e ? L : b, p = fe(r), O = p * r, y = window.devicePixelRatio, R = -d, B = Math.floor(R / O), x = Math.floor(
-          ((e ? s : h) - d) / O
+}), ge = (i, y, t, r) => {
+  ie(() => {
+    const e = r.value;
+    if (e) {
+      const u = e.offsetWidth, l = e.offsetHeight, { rulerConfig: a } = i, { bgColor: o, fontFamily: f, fontSize: d, lineColor: v, fontColor: h } = a;
+      if (u > 0 && l > 0) {
+        const n = e.getContext("2d");
+        n.clearRect(0, 0, u, l), o && (n.save(), n.fillStyle = o, n.fillRect(0, 0, u, l), n.restore());
+        const m = t ? a.yRulerWidth : a.xRulerHeight, { translateX: b, translateY: L, scale: s } = y, g = t ? L : b, c = pe(s), x = c * s, p = window.devicePixelRatio, M = -g, X = Math.floor(M / x), _ = Math.floor(
+          ((t ? l : u) - g) / x
         );
-        i.save(), i.fillStyle = o, i.font = `${u * y}px ${n}`, i.translate(0.5, 0.5), i.scale(1 / y, 1 / y), e ? i.fillRect((m - 1) * y, 0, 1, s * y) : i.fillRect(0, (m - 1) * y, h * y, 1);
-        for (let S = B; S <= x; S++) {
-          i.fillStyle = o;
-          const C = (d + S * O) * y;
-          let Y = m / 4;
-          S % 10 === 0 ? Y = m * 4 / 5 : S % 5 === 0 && (Y = m / 3), e ? i.fillRect((m - Y) * y, C, Y * y, 1) : (i.fillRect(C, (m - Y) * y, 1, Y * y), S % 10 === 0 && (i.fillStyle = v, i.fillText(
-            String(S * p),
-            C + 2 * y,
-            (m + 8 - Y) * y
+        n.save(), n.fillStyle = v, n.font = `${d * p}px ${f}`, n.translate(0.5, 0.5), n.scale(1 / p, 1 / p), t ? n.fillRect((m - 1) * p, 0, 1, l * p) : n.fillRect(0, (m - 1) * p, u * p, 1);
+        for (let C = X; C <= _; C++) {
+          n.fillStyle = v;
+          const S = (g + C * x) * p;
+          let w = m / 4;
+          C % 10 === 0 ? w = m * 4 / 5 : C % 5 === 0 && (w = m / 3), t ? n.fillRect((m - w) * p, S, w * p, 1) : (n.fillRect(S, (m - w) * p, 1, w * p), C % 10 === 0 && (n.fillStyle = h, n.fillText(
+            String(C * c),
+            S + 2 * p,
+            (m + 8 - w) * p
           )));
         }
-        if (i.restore(), e) {
-          i.font = `${u}px ${n}`;
-          let S = B;
-          for (; S <= x; )
-            if (S % 10)
-              S++;
+        if (n.restore(), t) {
+          n.font = `${d}px ${f}`, n.fillStyle = v;
+          let C = X;
+          for (; C <= _; )
+            if (C % 10)
+              C++;
             else {
-              i.save();
-              const C = d + S * O + m / 2;
-              i.translate(C + m / 5, C - m * 6 / 5), i.rotate(Math.PI / 2), i.fillText(String(S * p), m * 4 / 5, C), S += 10, i.restore();
+              n.save();
+              const S = g + C * x + m / 2;
+              n.translate(S + m / 5, S - m * 6 / 5), n.rotate(Math.PI / 2), n.fillText(String(C * c), m * 4 / 5, S), C += 10, n.restore();
             }
         }
       }
     }
   });
-}, ve = (l, g) => {
-  const e = T([0]);
-  function f(n, u = !0) {
-    const o = e.indexOf(n);
-    u && o === -1 && e.push(n), !u && o > -1 && e.splice(o, 1), u && e.sort((v, i) => v - i);
+}, ye = (i, y, t) => {
+  const r = j(
+    () => i.value[y ? "adsorptionYList" : "adsorptionXList"].sort()
+  ), e = A([]);
+  a(0), a(r.value);
+  function u(d, v = !0) {
+    const h = e.indexOf(d);
+    v && h === -1 && e.push(d), !v && h > -1 && e.splice(h, 1), v && D(e);
   }
-  function t(n, u = !0) {
-    Array.isArray(n) ? n.forEach((o) => f(o, u)) : f(n, u);
+  function l(d, v = !0) {
+    Array.isArray(d) ? d.forEach((h) => u(h, v)) : u(d, v), t(e);
   }
-  function h(n) {
-    t(n);
+  function a(d) {
+    l(d);
   }
-  function s(n) {
-    t(n, !1);
+  function o(d) {
+    l(d, !1);
   }
-  const c = M(
-    () => l.positionLineConfig[g ? "adsorptionYList" : "adsorptionXList"]
-  );
-  P(
-    () => c.value,
-    (n) => {
-      h(n);
-    },
-    {
-      deep: !0
+  T(
+    () => r.value,
+    (d, v) => {
+      D(d), d.join(",") !== D(e).join(",") && ((v == null ? void 0 : v.length) > 0 && o(v), a(d));
     }
   );
-  const a = M(
-    () => g ? l.canvasWidth : l.canvasHeight
+  const f = j(
+    () => y ? i.value.canvasHeight : i.value.canvasWidth
   );
-  return P(
-    () => a.value,
-    (n, u) => {
-      u !== void 0 && s(u), h(n);
+  return T(
+    () => f.value,
+    (d, v) => {
+      v !== void 0 && o(v), a(d);
     },
     {
       immediate: !0
     }
-  ), { adsorptionList: e, modifyAdsorptionList: t };
-}, he = (l, g, e, f, t, h) => {
-  let s = 1;
-  const c = T([]);
-  let a = -1, n = !1;
-  function u(o) {
-    if (n && a > -1) {
-      o.preventDefault();
-      const { xRulerHeight: v, yRulerWidth: i } = l.value.rulerConfig, m = c[a], b = (t ? o.pageY : o.pageX) - m.start, L = m.startTranslate + b, r = L > (t ? v : i), d = $(
-        f.value,
-        L,
-        t
-      ), p = Z(
-        e,
-        f.value,
-        l.value.positionLineConfig.adsorptionGap,
-        L,
-        d,
-        t
+  ), { adsorptionList: e, modifyAdsorptionList: l };
+}, me = (i, y, t, r, e, u) => {
+  let l = 1;
+  const a = A([]);
+  let o = -1, f = !1;
+  function d(h) {
+    if (f && o > -1) {
+      h.preventDefault();
+      const { xRulerHeight: n, yRulerWidth: m } = i.value.rulerConfig, b = a[o], L = (e ? h.pageY : h.pageX) - b.start, s = b.startTranslate + L, g = s > (e ? n : m), c = K(
+        r.value,
+        s,
+        e
+      ), x = I(
+        t,
+        r.value,
+        i.value.positionLineConfig.adsorptionGap,
+        s,
+        c,
+        e
       );
-      c[a].showTip = r, c[a].coordinate = p.coordinate;
+      a[o].showTip = g, a[o].translate = x.translate, a[o].coordinate = x.coordinate;
     }
   }
-  return A(() => {
-    if (h.value) {
-      const o = h.value;
-      o.addEventListener("mousedown", (v) => {
-        const i = de(o), m = t ? v.pageY : v.pageX, b = m - (t ? i.top : i.left), L = {
-          startTranslate: b,
-          start: m,
-          id: s,
-          coordinate: $(
-            f.value,
-            b,
-            t
+  function v() {
+    if (!f || o < 0) return;
+    f = !1;
+    const h = a[o], { width: n, height: m } = y.value, { xRulerHeight: b, yRulerWidth: L } = i.value.rulerConfig;
+    if (h.translate <= (e ? b : L) || h.translate >= (e ? m : n))
+      delete a[o];
+    else {
+      const s = I(
+        t,
+        r.value,
+        i.value.positionLineConfig.adsorptionGap,
+        h.translate,
+        h.coordinate,
+        e
+      );
+      a[o].showTip = !1, a[o].translate = s.translate, a[o].coordinate = s.coordinate;
+    }
+    o = -1;
+  }
+  return W(() => {
+    if (u.value) {
+      let h = function(m) {
+        const b = ve(n), L = e ? m.pageY : m.pageX, s = L - (e ? b.top : b.left), g = {
+          startTranslate: s,
+          translate: s,
+          start: L,
+          id: l,
+          coordinate: K(
+            r.value,
+            s,
+            e
           ),
           showTip: !1,
-          show: !0,
-          needAnimate: !1
+          show: !0
         };
-        a = s, c[s++] = L, n = !0, document.addEventListener("mousemove", u);
-      }), document.addEventListener("mouseup", () => {
-        if (document.removeEventListener("mousemove", u), !n || a < 0) return;
-        n = !1;
-        const v = c[a], { width: i, height: m } = g.value, { xRulerHeight: b, yRulerWidth: L } = l.value.rulerConfig;
-        v.translate <= (t ? b : L) || v.translate >= (t ? m : i) ? delete c[a] : (c[a].showTip = !1, c[a].needAnimate = !0), a = -1;
-      });
+        o = l, a[l++] = g, f = !0;
+      };
+      const n = u.value;
+      J(n, h, d, v);
     }
-  }), { positionLineMap: c };
-}, ge = (l, g, e, f, t, h, s, c) => {
-  let a = !1;
-  function n(o) {
-    s.value.showTip = o;
+  }), { positionLineMap: a };
+}, be = (i, y, t, r, e, u, l, a) => {
+  let o = !1;
+  function f(n) {
+    l.value.showTip = n;
   }
-  function u(o) {
-    if (!a) return;
-    const v = (t ? o.pageY : o.pageX) - s.value.start, i = s.value.startTranslate + v, m = $(
-      f.value,
-      i,
-      t
-    ), b = Z(
-      e.value,
-      f.value,
-      l.value.positionLineConfig.adsorptionGap,
-      i,
-      m,
-      t
+  function d(n) {
+    if (!o) return;
+    const m = (e ? n.pageY : n.pageX) - l.value.start, b = l.value.startTranslate + m, L = K(
+      r.value,
+      b,
+      e
+    ), s = I(
+      t.value,
+      r.value,
+      i.value.positionLineConfig.adsorptionGap,
+      b,
+      L,
+      e
     );
-    s.value.coordinate = b.coordinate;
+    l.value.coordinate = s.coordinate, l.value.translate = s.translate;
   }
-  A(() => {
-    if (h.value) {
-      const o = h.value;
-      o.addEventListener("mouseenter", () => {
-        n(!0);
-      }), o.addEventListener("mouseleave", () => {
-        console.log({ isMouseDown: a }), a || n(!1);
-      }), o.addEventListener("mousedown", (v) => {
-        v.preventDefault(), a = !0, s.value.showTip = !0;
-        const i = t ? v.pageY : v.pageX;
-        s.value.start = i, s.value.startTranslate = N(
-          f.value,
-          s.value.coordinate,
-          t
-        ), s.value.needAnimate = !1, document.addEventListener("mousemove", u);
-      }), document.addEventListener("mouseup", () => {
-        if (!a) return;
-        a = !1;
-        const { translate: v, id: i } = s.value, { width: m, height: b } = g.value, { xRulerHeight: L, yRulerWidth: r } = l.value.rulerConfig;
-        v <= (t ? L : r) || v >= (t ? b : m) ? c(i) : (n(!1), s.value.needAnimate = !0), document.removeEventListener("mousemove", u);
-      });
+  function v(n) {
+    o = !0, l.value.showTip = !0;
+    const m = e ? n.pageY : n.pageX;
+    l.value.start = m, l.value.startTranslate = G(
+      r.value,
+      l.value.coordinate,
+      e
+    );
+  }
+  function h() {
+    if (!o) return;
+    o = !1;
+    const { translate: n, id: m } = l.value, { width: b, height: L } = y.value, { xRulerHeight: s, yRulerWidth: g } = i.value.rulerConfig;
+    if (n <= (e ? s : g) || n >= (e ? L : b))
+      a(m);
+    else {
+      f(!1);
+      const c = I(
+        t.value,
+        r.value,
+        i.value.positionLineConfig.adsorptionGap,
+        n,
+        l.value.coordinate,
+        e
+      );
+      l.value.coordinate = c.coordinate, l.value.translate = c.translate;
+    }
+  }
+  W(() => {
+    if (u.value) {
+      const n = u.value;
+      n.addEventListener("mouseenter", () => {
+        f(!0);
+      }), n.addEventListener("mouseleave", () => {
+        o || f(!1);
+      }), J(n, v, d, h);
     }
   });
-}, me = /* @__PURE__ */ W({
+}, xe = /* @__PURE__ */ H({
   __name: "PositionLine",
   props: {
     containerInfo: {
@@ -344,41 +392,40 @@ const pe = (l, g, e, f) => {
     }
   },
   emits: ["remove-position-line"],
-  setup(l, { emit: g }) {
-    const e = l, { lineInfo: f, adsorptionList: t, transformInfo: h, opt: s, containerInfo: c } = K(e), a = M(() => s.value.positionLineConfig.padding), n = M(() => 2 * a.value + 1), u = M(
-      () => N(
-        h.value,
-        f.value.coordinate,
-        e.isY
+  setup(i, { emit: y }) {
+    const t = i, { lineInfo: r, adsorptionList: e, transformInfo: u, opt: l, containerInfo: a } = U(t), o = j(() => l.value.positionLineConfig.padding), f = j(() => 2 * o.value + 1), d = j(
+      () => G(
+        u.value,
+        r.value.coordinate,
+        t.isY
       )
-    ), o = M(() => {
-      const { width: p, height: O } = c.value, { isY: y } = e, R = y ? `translate(0, ${u.value}px)` : `translate(${u.value}px, 0)`;
+    ), v = j(() => {
+      const { width: c, height: x } = a.value, { isY: p } = t, M = p ? `translate(0, ${d.value}px)` : `translate(${d.value}px, 0)`;
       return {
-        display: f.value.show ? "block" : "none",
+        display: r.value.show ? "block" : "none",
         position: "absolute",
-        width: (y ? p : n.value) + "px",
-        height: (y ? n.value : O) + "px",
-        cursor: y ? "row-resize" : "col-resize",
-        top: (y ? -a.value : 0) + "px",
-        left: (y ? 0 : -a.value) + "px",
-        transform: R,
-        zIndex: e.opt.positionLineConfig.zIndex,
-        transition: f.value.needAnimate ? "transform 300ms" : ""
+        width: (p ? c : f.value) + "px",
+        height: (p ? f.value : x) + "px",
+        cursor: p ? "row-resize" : "col-resize",
+        top: (p ? -o.value : 0) + "px",
+        left: (p ? 0 : -o.value) + "px",
+        transform: M,
+        zIndex: t.opt.positionLineConfig.zIndex
       };
-    }), v = M(() => {
-      const { isY: p } = e;
+    }), h = j(() => {
+      const { isY: c } = t;
       return {
         position: "absolute",
-        width: p ? "100%" : "1px",
-        height: p ? "1px" : "100%",
-        backgroundColor: s.value.positionLineConfig.lineColor,
-        top: (p ? a.value : 0) + "px",
-        left: (p ? 0 : a.value) + "px"
+        width: c ? "100%" : "1px",
+        height: c ? "1px" : "100%",
+        backgroundColor: l.value.positionLineConfig.lineColor,
+        top: (c ? o.value : 0) + "px",
+        left: (c ? 0 : o.value) + "px"
       };
-    }), i = j({}), m = M(() => {
-      const { isY: p } = e, { width: O, height: y } = c.value, { tipWidth: R, tipHeight: B } = i.value;
-      let x, S;
-      return R && B ? (S = p ? "50%" : (u.value + n.value + R >= O ? -R : n.value) + "px", x = p ? (u.value + n.value + B >= y ? -B : n.value) + "px" : "50%") : (S = p ? "50%" : n.value + "px", x = p ? n.value + "px" : "50%"), {
+    }), n = B({}), m = j(() => {
+      const { isY: c } = t, { width: x, height: p } = a.value, { tipWidth: M, tipHeight: X } = n.value;
+      let _, C;
+      return M && X ? (C = c ? "50%" : (d.value + f.value + M >= x ? -M : f.value) + "px", _ = c ? (d.value + f.value + X >= p ? -X : f.value) + "px" : "50%") : (C = c ? "50%" : f.value + "px", _ = c ? f.value + "px" : "50%"), {
         position: "absolute",
         padding: "5px",
         lineHeight: "18px",
@@ -389,50 +436,50 @@ const pe = (l, g, e, f) => {
         borderRadius: "4px",
         userSelect: "none",
         textAlign: "center",
-        left: S,
-        top: x,
-        transform: p ? "translate(-50%, 0)" : "translate(0, -50%)",
-        visibility: f.value.showTip ? "visible" : "hidden"
+        left: C,
+        top: _,
+        transform: c ? "translate(-50%, 0)" : "translate(0, -50%)",
+        visibility: r.value.showTip ? "visible" : "hidden"
       };
-    }), b = j(null), L = g;
-    function r(p) {
-      L("remove-position-line", p);
+    }), b = B(null), L = y;
+    function s(c) {
+      L("remove-position-line", c);
     }
-    ge(
-      s,
-      c,
-      t,
-      h,
-      e.isY,
+    be(
+      l,
+      a,
+      e,
+      u,
+      t.isY,
       b,
-      f,
-      r
+      r,
+      s
     );
-    const d = j(null);
-    return A(() => {
-      if (d.value) {
-        const p = d.value, O = p.offsetWidth, y = p.offsetHeight;
-        i.value.tipWidth = O, i.value.tipHeight = y;
+    const g = B(null);
+    return W(() => {
+      if (g.value) {
+        const c = g.value, x = c.offsetWidth, p = c.offsetHeight;
+        n.value.tipWidth = x, n.value.tipHeight = p;
       }
-    }), (p, O) => (_(), E("div", {
+    }), (c, x) => (Y(), P("div", {
       ref_key: "positionLineRef",
       ref: b,
       class: "scale-ruler_position-line",
-      style: X(o.value)
+      style: E(v.value)
     }, [
-      D("div", {
+      $("div", {
         class: "scale-ruler_position-line_inner",
-        style: X(v.value)
+        style: E(h.value)
       }, null, 4),
-      D("div", {
+      $("div", {
         class: "scale-ruler_position-line_tip",
-        style: X(m.value),
+        style: E(m.value),
         ref_key: "tipRef",
-        ref: d
-      }, ne((l.isY ? "Y" : "X") + ": " + +w(f).coordinate.toFixed(2) + " px"), 5)
+        ref: g
+      }, se((i.isY ? "Y" : "X") + ": " + +R(r).coordinate.toFixed(2) + " px"), 5)
     ], 4));
   }
-}), ye = ["width", "height"], V = /* @__PURE__ */ W({
+}), Le = ["width", "height"], te = /* @__PURE__ */ H({
   __name: "Ruler",
   props: {
     containerInfo: {
@@ -452,170 +499,180 @@ const pe = (l, g, e, f) => {
       required: !0
     }
   },
-  setup(l, { expose: g }) {
-    const e = l, { opt: f, transformInfo: t, containerInfo: h } = K(e), s = M(() => {
-      const { isY: r, containerInfo: d, opt: p } = e;
+  emits: ["update-adsorption-list"],
+  setup(i, { expose: y, emit: t }) {
+    const r = i, { opt: e, transformInfo: u, containerInfo: l } = U(r), a = j(() => {
+      const { isY: p, containerInfo: M, opt: X } = r;
       return {
-        width: r ? p.rulerConfig.yRulerWidth : d.width,
-        height: r ? d.height : p.rulerConfig.xRulerHeight
+        width: p ? X.rulerConfig.yRulerWidth : M.width,
+        height: p ? M.height : X.rulerConfig.xRulerHeight
       };
-    }), c = M(() => ({
+    }), o = j(() => ({
       position: "absolute",
       left: 0,
       top: 0,
-      zIndex: e.opt.rulerConfig.zIndex + (e.isY ? 0 : 1)
-    })), a = j();
-    P(
-      [() => e.containerInfo, () => e.transformInfo],
+      zIndex: r.opt.rulerConfig.zIndex + (r.isY ? 0 : 1)
+    })), f = B();
+    T(
+      [() => r.containerInfo, () => r.transformInfo],
       () => {
-        pe(e.opt, e.transformInfo, e.isY, a);
+        ge(r.opt, r.transformInfo, r.isY, f);
       },
       {
         deep: !0
       }
     );
-    const { adsorptionList: n, modifyAdsorptionList: u } = ve(
-      e.opt,
-      e.isY
-    ), { positionLineMap: o } = he(
-      f,
+    const d = t;
+    function v(p) {
+      d("update-adsorption-list", p, !r.isY);
+    }
+    const { adsorptionList: h, modifyAdsorptionList: n } = ye(
+      e,
+      !r.isY,
+      v
+    ), { positionLineMap: m } = me(
+      e,
+      l,
       h,
-      n,
-      t,
-      !e.isY,
-      a
+      u,
+      !r.isY,
+      f
     );
-    function v(r) {
-      delete o[r];
+    function b(p) {
+      delete m[p];
     }
-    function i() {
-      Object.keys(o).forEach((r) => {
-        v(r);
+    function L() {
+      Object.keys(m).forEach((p) => {
+        b(p);
       });
     }
-    function m(r = !0) {
-      Object.keys(o).forEach((d) => {
-        o[d].show = r;
+    function s(p = !0) {
+      Object.keys(m).forEach((M) => {
+        m[M].show = p;
       });
     }
-    const b = j(!0);
-    function L(r = !0) {
-      b.value = r, m(r);
+    const g = B(!0);
+    function c(p = !0) {
+      g.value = p, s(p);
     }
-    return g({
-      modifyAdsorptionList: u,
-      removeAllPositionLine: i,
-      togglePositionLine: m,
-      toggleRuler: L
-    }), (r, d) => (_(), E(k, null, [
-      oe(D("canvas", {
+    function x() {
+      return m.filter((p) => !!p).map((p) => p.coordinate).sort((p, M) => p - M);
+    }
+    return y({
+      modifyAdsorptionList: n,
+      removeAllPositionLine: L,
+      togglePositionLine: s,
+      toggleRuler: c,
+      getPositionLineList: x
+    }), (p, M) => (Y(), P(N, null, [
+      le($("canvas", {
         ref_key: "rulerRef",
-        ref: a,
-        style: X(c.value),
-        width: s.value.width,
-        height: s.value.height
-      }, null, 12, ye), [
-        [re, b.value]
+        ref: f,
+        style: E(o.value),
+        width: a.value.width,
+        height: a.value.height
+      }, null, 12, Le), [
+        [ce, g.value]
       ]),
-      e.opt.usePositionLine ? (_(), E("div", {
+      r.opt.usePositionLine ? (Y(), P("div", {
         key: 0,
-        class: ae("position-line-" + (e.isY ? "x" : "y"))
+        class: ue("position-line-" + (r.isY ? "x" : "y"))
       }, [
-        (_(!0), E(k, null, ie(Object.keys(w(o)), (p) => (_(), q(me, {
-          key: p,
-          opt: e.opt,
-          "is-y": !e.isY,
-          "transform-info": e.transformInfo,
-          "container-info": e.containerInfo,
-          "line-info": w(o)[p],
-          "adsorption-list": w(n),
-          onRemovePositionLine: v
+        (Y(!0), P(N, null, fe(Object.keys(R(m)), (X) => (Y(), F(xe, {
+          key: X,
+          opt: r.opt,
+          "is-y": !r.isY,
+          "transform-info": r.transformInfo,
+          "container-info": r.containerInfo,
+          "line-info": R(m)[X],
+          "adsorption-list": R(h),
+          onRemovePositionLine: b
         }, null, 8, ["opt", "is-y", "transform-info", "container-info", "line-info", "adsorption-list"]))), 128))
-      ], 2)) : I("", !0)
+      ], 2)) : z("", !0)
     ], 64));
   }
 });
-function be(l) {
-  return l && l.__esModule && Object.prototype.hasOwnProperty.call(l, "default") ? l.default : l;
+function Se(i) {
+  return i && i.__esModule && Object.prototype.hasOwnProperty.call(i, "default") ? i.default : i;
 }
-var z, J;
-function xe() {
-  if (J) return z;
-  J = 1;
-  var l = function(d) {
-    return g(d) && !e(d);
+var q, ne;
+function Oe() {
+  if (ne) return q;
+  ne = 1;
+  var i = function(g) {
+    return y(g) && !t(g);
   };
-  function g(r) {
-    return !!r && typeof r == "object";
+  function y(s) {
+    return !!s && typeof s == "object";
   }
-  function e(r) {
-    var d = Object.prototype.toString.call(r);
-    return d === "[object RegExp]" || d === "[object Date]" || h(r);
+  function t(s) {
+    var g = Object.prototype.toString.call(s);
+    return g === "[object RegExp]" || g === "[object Date]" || u(s);
   }
-  var f = typeof Symbol == "function" && Symbol.for, t = f ? Symbol.for("react.element") : 60103;
-  function h(r) {
-    return r.$$typeof === t;
+  var r = typeof Symbol == "function" && Symbol.for, e = r ? Symbol.for("react.element") : 60103;
+  function u(s) {
+    return s.$$typeof === e;
   }
-  function s(r) {
-    return Array.isArray(r) ? [] : {};
+  function l(s) {
+    return Array.isArray(s) ? [] : {};
   }
-  function c(r, d) {
-    return d.clone !== !1 && d.isMergeableObject(r) ? b(s(r), r, d) : r;
+  function a(s, g) {
+    return g.clone !== !1 && g.isMergeableObject(s) ? b(l(s), s, g) : s;
   }
-  function a(r, d, p) {
-    return r.concat(d).map(function(O) {
-      return c(O, p);
+  function o(s, g, c) {
+    return s.concat(g).map(function(x) {
+      return a(x, c);
     });
   }
-  function n(r, d) {
-    if (!d.customMerge)
+  function f(s, g) {
+    if (!g.customMerge)
       return b;
-    var p = d.customMerge(r);
-    return typeof p == "function" ? p : b;
+    var c = g.customMerge(s);
+    return typeof c == "function" ? c : b;
   }
-  function u(r) {
-    return Object.getOwnPropertySymbols ? Object.getOwnPropertySymbols(r).filter(function(d) {
-      return Object.propertyIsEnumerable.call(r, d);
+  function d(s) {
+    return Object.getOwnPropertySymbols ? Object.getOwnPropertySymbols(s).filter(function(g) {
+      return Object.propertyIsEnumerable.call(s, g);
     }) : [];
   }
-  function o(r) {
-    return Object.keys(r).concat(u(r));
+  function v(s) {
+    return Object.keys(s).concat(d(s));
   }
-  function v(r, d) {
+  function h(s, g) {
     try {
-      return d in r;
+      return g in s;
     } catch {
       return !1;
     }
   }
-  function i(r, d) {
-    return v(r, d) && !(Object.hasOwnProperty.call(r, d) && Object.propertyIsEnumerable.call(r, d));
+  function n(s, g) {
+    return h(s, g) && !(Object.hasOwnProperty.call(s, g) && Object.propertyIsEnumerable.call(s, g));
   }
-  function m(r, d, p) {
-    var O = {};
-    return p.isMergeableObject(r) && o(r).forEach(function(y) {
-      O[y] = c(r[y], p);
-    }), o(d).forEach(function(y) {
-      i(r, y) || (v(r, y) && p.isMergeableObject(d[y]) ? O[y] = n(y, p)(r[y], d[y], p) : O[y] = c(d[y], p));
-    }), O;
+  function m(s, g, c) {
+    var x = {};
+    return c.isMergeableObject(s) && v(s).forEach(function(p) {
+      x[p] = a(s[p], c);
+    }), v(g).forEach(function(p) {
+      n(s, p) || (h(s, p) && c.isMergeableObject(g[p]) ? x[p] = f(p, c)(s[p], g[p], c) : x[p] = a(g[p], c));
+    }), x;
   }
-  function b(r, d, p) {
-    p = p || {}, p.arrayMerge = p.arrayMerge || a, p.isMergeableObject = p.isMergeableObject || l, p.cloneUnlessOtherwiseSpecified = c;
-    var O = Array.isArray(d), y = Array.isArray(r), R = O === y;
-    return R ? O ? p.arrayMerge(r, d, p) : m(r, d, p) : c(d, p);
+  function b(s, g, c) {
+    c = c || {}, c.arrayMerge = c.arrayMerge || o, c.isMergeableObject = c.isMergeableObject || i, c.cloneUnlessOtherwiseSpecified = a;
+    var x = Array.isArray(g), p = Array.isArray(s), M = x === p;
+    return M ? x ? c.arrayMerge(s, g, c) : m(s, g, c) : a(g, c);
   }
-  b.all = function(d, p) {
-    if (!Array.isArray(d))
+  b.all = function(g, c) {
+    if (!Array.isArray(g))
       throw new Error("first argument should be an array");
-    return d.reduce(function(O, y) {
-      return b(O, y, p);
+    return g.reduce(function(x, p) {
+      return b(x, p, c);
     }, {});
   };
   var L = b;
-  return z = L, z;
+  return q = L, q;
 }
-var Le = xe();
-const Q = /* @__PURE__ */ be(Le), F = {
+var we = Oe();
+const oe = /* @__PURE__ */ Se(we), O = {
   // 画布缩放比例
   scale: 1,
   // 是否允许缩放
@@ -634,8 +691,8 @@ const Q = /* @__PURE__ */ be(Le), F = {
   containerWidth: 1e3,
   // 容器高度，containerAutoSize为true后，不取该值
   containerHeight: 500,
-  containerXPadding: 80,
-  containerYPadding: 80,
+  containerXPadding: 800,
+  containerYPadding: 800,
   canvasWidth: 1920,
   canvasHeight: 1e3,
   // 是否代理放大和缩小快捷键 ctrl+ "+" 和 ctrl + "-"
@@ -646,11 +703,11 @@ const Q = /* @__PURE__ */ be(Le), F = {
   useRuler: !0,
   // 是否使用定位线
   usePositionLine: !0,
+  adsorptionXList: [],
+  adsorptionYList: [],
   positionLineConfig: {
-    lineColor: "#24aa61",
+    lineColor: "#6CC6A7",
     padding: 3,
-    adsorptionXList: [],
-    adsorptionYList: [],
     // 吸附距离
     adsorptionGap: 4,
     zIndex: 300
@@ -667,356 +724,442 @@ const Q = /* @__PURE__ */ be(Le), F = {
   // 标尺配置
   rulerConfig: {
     // 垂直标尺的宽度
-    yRulerWidth: 30,
+    yRulerWidth: 20,
     // 水平标尺的高度
-    xRulerHeight: 30,
+    xRulerHeight: 20,
     // 标尺背景色
-    bgColor: "#efefef",
+    // bgColor: '#efefef',
+    bgColor: "#f5f5f5",
     // 标尺数值的颜色
-    fontColor: "#000000",
+    fontColor: "#797B80",
     // 标尺数值的字体大小
-    fontSize: 12,
+    fontSize: 10,
     // 标尺数值的字体
     fontFamily: "Arial",
     // 标尺刻度线的颜色
-    lineColor: "#000000",
+    lineColor: "#797B80",
     zIndex: 400
-  },
-  // 画布缩放回调
-  onScale: () => {
-  },
-  // 画布移动回调
-  onMove: () => {
   }
-}, Se = function() {
-  const l = {};
-  for (const g in F) {
-    const e = F[g];
-    typeof e == "object" && e !== null ? l[g] = () => e : l[g] = e;
+};
+(function() {
+  const i = {};
+  for (const y in O) {
+    const t = O[y];
+    typeof t == "object" && t !== null ? i[y] = () => t : i[y] = t;
   }
-  return l;
-}(), Oe = (l, g) => {
-  const e = T({
+  return i;
+})();
+const Me = {
+  scale: {
+    type: Number,
+    default: O.scale
+  },
+  minScale: {
+    type: Number,
+    default: O.minScale
+  },
+  maxScale: {
+    type: Number,
+    default: O.maxScale
+  },
+  canScale: {
+    type: Boolean,
+    default: O.canScale
+  },
+  autoCenter: {
+    type: Boolean,
+    default: O.autoCenter
+  },
+  autoScale: {
+    type: Boolean,
+    default: O.autoScale
+  },
+  containerAutoSize: {
+    type: Boolean,
+    default: O.containerAutoSize
+  },
+  containerWidth: {
+    type: Number,
+    default: O.containerWidth
+  },
+  containerHeight: {
+    type: Number,
+    default: O.containerHeight
+  },
+  containerXPadding: {
+    type: Number,
+    default: O.containerXPadding
+  },
+  containerYPadding: {
+    type: Number,
+    default: O.containerYPadding
+  },
+  canvasWidth: {
+    type: Number,
+    default: O.canvasWidth
+  },
+  canvasHeight: {
+    type: Number,
+    default: O.canvasHeight
+  },
+  proxyScaleKey: {
+    type: Boolean,
+    default: O.proxyScaleKey
+  },
+  useScrollBar: {
+    type: Boolean,
+    default: O.useScrollBar
+  },
+  useRuler: {
+    type: Boolean,
+    default: O.useRuler
+  },
+  usePositionLine: {
+    type: Boolean,
+    default: O.usePositionLine
+  },
+  positionLineConfig: {
+    type: Object,
+    default: O.positionLineConfig
+  },
+  canvasStyle: {
+    type: Object,
+    default: O.canvasStyle
+  },
+  scrollBarConfig: {
+    type: Object,
+    default: O.scrollBarConfig
+  },
+  rulerConfig: {
+    type: Object,
+    default: O.rulerConfig
+  },
+  adsorptionXList: {
+    type: Object,
+    default: O.adsorptionXList
+  },
+  adsorptionYList: {
+    type: Object,
+    default: O.adsorptionYList
+  }
+}, Ce = (i, y) => {
+  const t = A({
     width: 0,
     height: 0,
     originWidth: 0,
     originHeight: 0
   });
-  function f(c, a) {
-    new ResizeObserver((u) => {
-      for (const o of u)
-        if (o.target === a) {
-          const v = a.offsetWidth, i = a.offsetHeight;
-          (v !== e.originWidth || i !== e.originHeight) && t(c, a);
+  function r(a, o) {
+    new ResizeObserver((d) => {
+      for (const v of d)
+        if (v.target === o) {
+          const h = o.offsetWidth, n = o.offsetHeight;
+          (h !== t.originWidth || n !== t.originHeight) && e(a, o);
         }
-    }).observe(a);
+    }).observe(o);
   }
-  function t(c, a, n = !1) {
-    const u = c.value;
-    u.containerAutoSize ? (e.width = a.offsetWidth, e.height = a.offsetHeight, e.originWidth = e.width, e.originHeight = e.height, n && f(c, a)) : (e.width = u.containerWidth, e.height = u.containerHeight);
-    const o = getComputedStyle(a);
-    o.boxSizing === "border-box" && (e.width -= parseFloat(o.borderLeftWidth) + parseFloat(o.borderRightWidth), e.height -= parseFloat(o.borderTopWidth) + parseFloat(o.borderBottomWidth)), o.position === "static" && (e.position = "relative");
+  function e(a, o, f = !1) {
+    const d = a.value;
+    d.containerAutoSize ? (t.width = o.offsetWidth, t.height = o.offsetHeight, t.originWidth = t.width, t.originHeight = t.height, f && r(a, o)) : (t.width = d.containerWidth, t.height = d.containerHeight);
+    const v = getComputedStyle(o);
+    v.boxSizing === "border-box" && (t.width -= parseFloat(v.borderLeftWidth) + parseFloat(v.borderRightWidth), t.height -= parseFloat(v.borderTopWidth) + parseFloat(v.borderBottomWidth)), v.position === "static" && (t.position = "relative");
   }
-  A(() => {
-    const c = g.value;
-    c && t(l, c, !0);
+  W(() => {
+    const a = y.value;
+    a && e(i, a, !0);
   });
-  const h = M(() => ({
-    width: e.width,
-    height: e.height
-  })), s = M(() => {
-    const c = l.value, a = {
+  const u = j(() => ({
+    width: t.width,
+    height: t.height
+  })), l = j(() => {
+    const a = i.value, o = {
       overflow: "hidden"
     };
-    return c.containerAutoSize || (a.width = e.width + "px", a.height = e.height + "px"), e.position && (a.position = e.position), a;
+    return a.containerAutoSize || (o.width = t.width + "px", o.height = t.height + "px"), t.position && (o.position = t.position), o;
   });
   return {
-    containerInfo: h,
-    containerStyle: s
+    containerInfo: u,
+    containerStyle: l
   };
-}, we = (l, g) => {
-  const e = T({});
-  return P(
-    () => g.value,
+}, Re = (i, y, t, r) => {
+  const e = A({});
+  return T(
+    () => y.value,
     () => {
-      const f = l.value;
-      let t = 0, h = 0, { scale: s } = f;
-      const { autoCenter: c, autoScale: a } = f, { width: n, height: u } = g.value;
-      if (a) {
-        const i = (n - 2 * f.containerXPadding) / f.canvasWidth, m = (u - 2 * f.containerYPadding) / f.canvasHeight;
-        s = Math.min(i, m);
+      const u = i.value;
+      let l = e.translateX || 0, a = e.translateY || 0, o = 0, f = 0, { scale: d } = u;
+      const { autoCenter: v, autoScale: h } = u, { width: n, height: m } = y.value;
+      if (h) {
+        const s = (n - 160) / u.canvasWidth, g = (m - 2 * 80) / u.canvasHeight;
+        d = Math.min(s, g);
       }
-      e.scale = s;
-      let o = 0, v = 0;
-      t = f.canvasWidth * s, h = f.canvasHeight * s, c && (o = Math.floor((n - t) / 2), v = Math.floor((u - h) / 2), e.translateX = o, e.translateY = v);
+      e.scale = d;
+      let b = 0, L = 0;
+      o = u.canvasWidth * d, f = u.canvasHeight * d, v && (b = Math.floor((n - o) / 2), L = Math.floor((m - f) / 2), e.translateX = b, e.translateY = L), u.scale !== d && t(d), (l !== b || a || L) && r(b, L);
     },
     {
       deep: !0
     }
   ), { transformInfo: e };
-}, Me = (l, g, e) => ({ scrollBarInfo: M(() => {
-  const t = l.value, { width: h, height: s } = g.value, { translateX: c, translateY: a, scale: n } = e, u = t.canvasWidth * n + 2 * t.containerXPadding, o = t.canvasHeight * n + 2 * t.containerYPadding, v = h < u, i = s < o, m = v || i, b = h * ((t.containerXPadding - c) / u), L = s * ((t.containerYPadding - a) / o), r = h / u * h, d = s / o * s;
+}, je = (i, y, t) => ({ scrollBarInfo: j(() => {
+  const e = i.value, { width: u, height: l } = y.value, { translateX: a, translateY: o, scale: f } = t, d = e.canvasWidth * f + 2 * e.containerXPadding, v = e.canvasHeight * f + 2 * e.containerYPadding, h = u < d, n = l < v, m = h || n, b = u * ((e.containerXPadding - a) / d), L = l * ((e.containerYPadding - o) / v), s = u / d * u, g = l / v * l;
   return {
-    totalHeight: o,
-    totalWidth: u,
+    totalHeight: v,
+    totalWidth: d,
     left: b,
     top: L,
-    width: r,
-    height: d,
-    isYLarge: i,
-    isXLarge: v,
+    width: s,
+    height: g,
+    isYLarge: n,
+    isXLarge: h,
     isLarge: m
   };
 }) });
-function ee(l, g, e) {
-  const f = l.value, { containerXPadding: t, containerYPadding: h, canvasWidth: s, canvasHeight: c } = f, a = s * e, n = c * e, { width: u, height: o } = g.value, v = Math.max((u - a) / 2, t), i = Math.max((o - n) / 2, h), m = a + 2 * t > u ? u - (a + t) : v, b = n + 2 * h > o ? o - (n + h) : i;
+function ae(i, y, t) {
+  const r = i.value, { containerXPadding: e, containerYPadding: u, canvasWidth: l, canvasHeight: a } = r, o = l * t, f = a * t, { width: d, height: v } = y.value, h = Math.max((d - o) / 2, e), n = Math.max((v - f) / 2, u), m = o + 2 * e > d ? d - (o + e) : h, b = f + 2 * u > v ? v - (f + u) : n;
   return {
-    maxTranslateX: v,
-    maxTranslateY: i,
+    maxTranslateX: h,
+    maxTranslateY: n,
     minTranslateX: m,
     minTranslateY: b
   };
 }
-const Re = (l, g, e) => ({ boundaryInfo: M(() => ee(l, g, e.scale)) }), G = (l, g, e, f, t) => {
-  const h = l.value;
-  let { translateX: s, translateY: c, scale: a } = e;
-  f = Math.min(Math.max(f, h.minScale), h.maxScale);
-  const n = f - a, u = ee(
-    l,
-    g,
-    f
+const Xe = (i, y, t) => ({ boundaryInfo: j(() => ae(i, y, t.scale)) }), Q = (i, y, t, r, e, u) => {
+  const l = i.value;
+  if (!l.canScale) return;
+  let { translateX: a, translateY: o, scale: f } = t, d = a, v = o;
+  r = Math.min(Math.max(r, l.minScale), l.maxScale);
+  const h = r - f, n = ae(
+    i,
+    y,
+    r
   );
-  s -= n * h.canvasWidth / 2, c -= n * h.canvasHeight / 2, s = Math.max(
-    Math.min(s, u.maxTranslateX),
-    u.minTranslateX
-  ), c = Math.max(
-    Math.min(c, u.maxTranslateY),
-    u.minTranslateY
-  ), e.scale = f, e.translateX = s, e.translateY = c, t(f);
-}, Ce = (l, g, e) => {
-  l.value.proxyScaleKey && document.addEventListener("keydown", (f) => {
-    if (l.value.canScale) {
-      const t = f.keyCode;
-      if ((f.metaKey || f.ctrlKey) && (t === 187 || t === 189)) {
-        f.preventDefault();
-        const h = e.scale + (t === 187 ? 0.05 : -0.05);
-        G(l, g, e, h);
+  a -= h * l.canvasWidth / 2, o -= h * l.canvasHeight / 2, a = Math.max(
+    Math.min(a, n.maxTranslateX),
+    n.minTranslateX
+  ), o = Math.max(
+    Math.min(o, n.maxTranslateY),
+    n.minTranslateY
+  ), t.scale = r, t.translateX = a, t.translateY = o, e(r), (d !== a || v !== o) && u(a, o);
+}, Ye = (i, y, t, r, e) => {
+  i.value.proxyScaleKey && document.addEventListener("keydown", (u) => {
+    if (i.value.canScale) {
+      const l = u.keyCode;
+      if ((u.metaKey || u.ctrlKey) && (l === 187 || l === 189)) {
+        u.preventDefault();
+        const a = t.scale + (l === 187 ? 0.05 : -0.05);
+        Q(i, y, t, a, r, e);
       }
     }
   });
-}, _e = (l, g, e, f, t, h, s, c, a) => {
-  let n = null;
-  Object.assign(s, {
+}, Be = (i, y, t, r, e, u, l, a, o) => {
+  let f = null;
+  Object.assign(l, {
     xOpacity: 0,
     yOpacity: 0,
     scrollBarMouseDown: !1,
     scrollBarEnter: !1
-  }), A(() => {
-    t.value && t.value.addEventListener("wheel", (u) => {
-      if (l.value.canScale)
-        if (u.metaKey || u.ctrlKey) {
-          u.preventDefault();
-          const o = -1 * u.deltaY / 100, v = e.scale + o;
-          G(l, g, e, v, c);
+  }), W(() => {
+    e.value && e.value.addEventListener("wheel", (d) => {
+      if (i.value.canScale)
+        if (d.metaKey || d.ctrlKey) {
+          d.preventDefault();
+          const v = -1 * d.deltaY / 100, h = t.scale + v;
+          Q(i, y, t, h, a, o);
         } else {
-          if (!h.value.isLarge || s.scrollBarMouseDown)
+          if (!u.value.isLarge || l.scrollBarMouseDown)
             return;
-          u.preventDefault();
-          let { translateX: o, translateY: v } = e;
-          n && clearTimeout(n);
-          const i = -u.deltaX, m = -u.deltaY;
+          d.preventDefault();
+          let { translateX: v, translateY: h } = t;
+          f && clearTimeout(f);
+          const n = -d.deltaX, m = -d.deltaY;
           let b = "";
-          const { opacity: L = 0.4 } = l.value.scrollBarConfig, { isXLarge: r, isYLarge: d } = h.value, { maxTranslateX: p, minTranslateX: O, maxTranslateY: y, minTranslateY: R } = f.value;
-          r && Math.abs(i) > Math.abs(m) && (o += i, o = Math.max(
-            Math.min(o, p),
-            O
-          ), s.xOpacity = L, s.yOpacity = 0, e.translateX = o, b = "x"), d && Math.abs(m) > Math.abs(i) && (b = "y", v += m, v = Math.max(
-            Math.min(v, y),
-            R
-          ), s.yOpacity = L, s.xOpacity = 0, e.translateY = v), b && (a(
-            e.translateX,
-            e.translateY
-          ), n = setTimeout(() => {
-            s.scrollBarEnter || (s[b === "y" ? "yOpacity" : "xOpacity"] = 0);
+          const { opacity: L = 0.4 } = i.value.scrollBarConfig, { isXLarge: s, isYLarge: g } = u.value, { maxTranslateX: c, minTranslateX: x, maxTranslateY: p, minTranslateY: M } = r.value;
+          s && Math.abs(n) > Math.abs(m) && (v += n, v = Math.max(
+            Math.min(v, c),
+            x
+          ), l.xOpacity = L, l.yOpacity = 0, t.translateX = v, b = "x"), g && Math.abs(m) > Math.abs(n) && (b = "y", h += m, h = Math.max(
+            Math.min(h, p),
+            M
+          ), l.yOpacity = L, l.xOpacity = 0, t.translateY = h), b && (o(
+            t.translateX,
+            t.translateY
+          ), f = setTimeout(() => {
+            l.scrollBarEnter || (l[b === "y" ? "yOpacity" : "xOpacity"] = 0);
           }, 1e3));
         }
     });
   });
-}, Be = /* @__PURE__ */ W({
+}, Pe = /* @__PURE__ */ H({
   __name: "index",
-  props: /* @__PURE__ */ se({
-    scale: {},
-    minScale: {},
-    maxScale: {},
-    canScale: { type: Boolean },
-    autoCenter: { type: Boolean },
-    autoScale: { type: Boolean },
-    containerAutoSize: { type: Boolean },
-    containerWidth: {},
-    containerHeight: {},
-    containerXPadding: {},
-    containerYPadding: {},
-    canvasWidth: {},
-    canvasHeight: {},
-    proxyScaleKey: { type: Boolean },
-    useScrollBar: { type: Boolean },
-    useRuler: { type: Boolean },
-    usePositionLine: { type: Boolean },
-    positionLineConfig: {},
-    canvasStyle: {},
-    scrollBarConfig: {},
-    rulerConfig: {},
-    onScale: { type: Function },
-    onMove: { type: Function }
-  }, Se),
-  emits: ["update:scale", "onScale", "onMove"],
-  setup(l, { expose: g, emit: e }) {
-    const f = l, t = j(
-      Q(F, f)
-    ), h = e, s = j(null), { containerInfo: c, containerStyle: a } = Oe(t, s), { transformInfo: n } = we(t, c), { boundaryInfo: u } = Re(t, c, n), { scrollBarInfo: o } = Me(t, c, n), v = T({});
-    P(
-      () => n.scale,
-      (x) => {
-        if (x) {
-          if (!v.scale) {
-            const S = {
-              scale: x,
-              translateX: n.translateX,
-              translateY: n.translateY
+  props: Me,
+  emits: [
+    "update:scale",
+    "onScale",
+    "onMove",
+    "update:adsorptionXList",
+    "update:adsorptionYList"
+  ],
+  setup(i, { expose: y, emit: t }) {
+    const r = i, e = B(
+      oe(O, r, { arrayMerge: V })
+    ), u = t, l = B(null), { containerInfo: a, containerStyle: o } = Ce(e, l), { transformInfo: f } = Re(e, a, n, m), { boundaryInfo: d } = Xe(e, a, f), { scrollBarInfo: v } = je(e, a, f), h = A({});
+    T(
+      () => f.scale,
+      (S) => {
+        if (S) {
+          if (!h.scale) {
+            const w = {
+              scale: S,
+              translateX: f.translateX,
+              translateY: f.translateY
             };
-            Object.assign(v, S);
+            Object.assign(h, w);
           }
-          h("update:scale", x);
+          u("update:scale", S);
         }
       }
-    ), P(
-      () => f,
+    ), T(
+      () => r,
       () => {
-        t.value = Q(t.value, f);
+        e.value = oe(e.value, r, {
+          arrayMerge: V
+        });
       },
       {
         deep: !0
       }
     );
-    function i(x) {
-      h("onScale", x);
+    function n(S) {
+      u("onScale", S);
     }
-    function m(x, S) {
-      h("onMove", x, S);
+    function m(S, w) {
+      u("onMove", S, w);
     }
-    function b(x) {
-      G(t, c, n, x, i);
+    function b(S) {
+      Q(e, a, f, S, n, m);
     }
-    P(
-      () => t.value.scale,
-      (x) => {
-        x !== n.scale && b(x);
+    T(
+      () => e.value.scale,
+      (S) => {
+        S !== f.scale && b(S);
       }
-    ), Ce(t, c, n);
-    const L = T({});
-    _e(
-      t,
-      c,
-      n,
-      u,
-      s,
-      o,
+    ), Ye(e, a, f, n, m);
+    const L = A({});
+    Be(
+      e,
+      a,
+      f,
+      d,
+      l,
+      v,
       L,
-      i,
+      n,
       m
     );
-    function r() {
-      Object.assign(n, v);
+    function s(S, w) {
+      u(`update:adsorption${w ? "Y" : "X"}List`, S);
     }
-    const d = j(null), p = j(null);
-    function O() {
-      t.value.useRuler && (d.value && d.value.removeAllPositionLine(), p.value && p.value.removeAllPositionLine());
+    function g() {
+      Object.assign(f, h);
     }
-    function y(x = !0) {
-      t.value.useRuler && (d.value && d.value.toggleRuler(x), p.value && p.value.toggleRuler(x));
+    const c = B(null), x = B(null);
+    function p() {
+      e.value.useRuler && (c.value && c.value.removeAllPositionLine(), x.value && x.value.removeAllPositionLine());
     }
-    function R(x = !0) {
-      t.value.useRuler && (d.value && d.value.togglePositionLine(x), p.value && p.value.togglePositionLine(x));
+    function M(S = !0) {
+      e.value.useRuler && (c.value && c.value.toggleRuler(S), x.value && x.value.toggleRuler(S));
     }
-    function B(x, S = !0, C = !1) {
-      t.value.useRuler && (C && d.value && d.value.modifyAdsorptionList(x, S), !C && p.value && p.value.modifyAdsorptionList(x, S));
+    function X(S = !0) {
+      e.value.useRuler && (c.value && c.value.togglePositionLine(S), x.value && x.value.togglePositionLine(S));
     }
-    return g({
-      reset: r,
+    function _(S, w = !0, Z = !1) {
+      e.value.useRuler && (Z && c.value && c.value.modifyAdsorptionList(S, w), !Z && x.value && x.value.modifyAdsorptionList(S, w));
+    }
+    function C(S) {
+      let w = [];
+      return e.value.useRuler && (S ? c.value && (w = c.value.getPositionLineList()) : x.value && (w = x.value.getPositionLineList())), w;
+    }
+    return y({
+      reset: g,
       changeScale: b,
-      removeAllPositionLine: O,
+      removeAllPositionLine: p,
       showRuler() {
-        y();
+        M();
       },
       hideRuler() {
-        y(!1);
+        M(!1);
       },
       showAllPositionLine() {
-        R();
+        X();
       },
       hideAllPositionLine() {
-        R(!1);
+        X(!1);
       },
-      addAdsorptionLine(x, S = !1) {
-        B(x, !0, S);
+      addAdsorptionLine(S, w = !1) {
+        _(S, !0, w);
       },
-      removeAdsorptionLine(x, S = !1) {
-        B(x, !1, S);
-      }
-    }), (x, S) => (_(), E("div", {
+      removeAdsorptionLine(S, w = !1) {
+        _(S, !1, w);
+      },
+      getPositionLineList: C
+    }), (S, w) => (Y(), P("div", {
+      class: "scale-ruler",
       ref_key: "container",
-      ref: s,
-      style: X(w(a))
+      ref: l,
+      style: E(R(o))
     }, [
-      t.value.useRuler ? (_(), E(k, { key: 0 }, [
-        H(V, {
+      e.value.useRuler ? (Y(), P(N, { key: 0 }, [
+        k(te, {
           ref_key: "xRuler",
-          ref: d,
-          opt: t.value,
-          "container-info": w(c),
-          "transform-info": w(n)
+          ref: c,
+          opt: e.value,
+          "container-info": R(a),
+          "transform-info": R(f),
+          onUpdateAdsorptionList: s
         }, null, 8, ["opt", "container-info", "transform-info"]),
-        H(V, {
+        k(te, {
           ref_key: "yRuler",
-          ref: p,
+          ref: x,
           "is-y": "",
-          opt: t.value,
-          "container-info": w(c),
-          "transform-info": w(n)
+          opt: e.value,
+          "container-info": R(a),
+          "transform-info": R(f),
+          onUpdateAdsorptionList: s
         }, null, 8, ["opt", "container-info", "transform-info"])
-      ], 64)) : I("", !0),
-      H(ue, {
-        "container-info": w(c),
-        opt: t.value,
-        "transform-info": w(n)
+      ], 64)) : z("", !0),
+      k(he, {
+        "container-info": R(a),
+        opt: e.value,
+        "transform-info": R(f)
       }, {
-        default: le(() => [
-          ce(x.$slots, "default")
+        default: de(() => [
+          re(S.$slots, "default")
         ]),
         _: 3
       }, 8, ["container-info", "opt", "transform-info"]),
-      w(o).isXLarge ? (_(), q(U, {
+      R(v).isXLarge ? (Y(), F(ee, {
         key: 1,
-        opt: t.value,
-        "container-info": w(c),
-        "scroll-bar-info": w(o),
+        opt: e.value,
+        "container-info": R(a),
+        "scroll-bar-info": R(v),
         "global-info": L,
-        "transform-info": w(n),
+        "transform-info": R(f),
         onOnMove: m
-      }, null, 8, ["opt", "container-info", "scroll-bar-info", "global-info", "transform-info"])) : I("", !0),
-      w(o).isYLarge ? (_(), q(U, {
+      }, null, 8, ["opt", "container-info", "scroll-bar-info", "global-info", "transform-info"])) : z("", !0),
+      R(v).isYLarge ? (Y(), F(ee, {
         key: 2,
-        opt: t.value,
-        "container-info": w(c),
-        "scroll-bar-info": w(o),
+        opt: e.value,
+        "container-info": R(a),
+        "scroll-bar-info": R(v),
         "global-info": L,
-        "transform-info": w(n),
+        "transform-info": R(f),
         onOnMove: m,
         "is-y": ""
-      }, null, 8, ["opt", "container-info", "scroll-bar-info", "global-info", "transform-info"])) : I("", !0)
+      }, null, 8, ["opt", "container-info", "scroll-bar-info", "global-info", "transform-info"])) : z("", !0)
     ], 4));
   }
 });
 export {
-  Be as default
+  Pe as default
 };

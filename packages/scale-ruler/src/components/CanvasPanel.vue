@@ -1,5 +1,7 @@
 <template>
-  <div ref="canvasPanel" :style="styles"></div>
+  <div ref="canvasPanel" :style="styles">
+    <slot></slot>
+  </div>
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
@@ -31,7 +33,6 @@ const styles = computed((): AnyRecord => {
     top: 0,
     width: props.opt?.canvasWidth + 'px',
     height: props.opt?.canvasHeight + 'px',
-    transition: 'transform 300ms',
     transformOrigin: '0 0',
     transform: `translate(${props.transformInfo.translateX}px, ${
       props.transformInfo.translateY

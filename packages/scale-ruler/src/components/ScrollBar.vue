@@ -4,6 +4,8 @@
 <script setup lang="ts">
 import { computed, toRefs, ref, onMounted } from 'vue';
 import type { PropType } from 'vue';
+import { bindMouseMove } from 'common';
+
 import type {
   AnyRecord,
   RequiredScaleRulerOpt,
@@ -93,6 +95,17 @@ function mousemoveEvent(e: MouseEvent) {
     transformInfo.value.translateY
   );
 }
+function mousedownEvent(e: MouseEvent) {
+  globalInfo.value.scrollBarMouseDown = true;
+  currentPropInfo.startX = e.pageX;
+  currentPropInfo.startY = e.pageY;
+  currentPropInfo.left = props.scrollBarInfo.left;
+  currentPropInfo.top = props.scrollBarInfo.top;
+}
+function mouseupEvent() {
+  if (!globalInfo.value.scrollBarMouseDown) return;
+  globalInfo.value.scrollBarMouseDown = false;
+}
 onMounted(() => {
   if (scrollBarRef.value) {
     const node = scrollBarRef.value as HTMLElement;
@@ -107,20 +120,7 @@ onMounted(() => {
       globalInfo.value.scrollBarEnter = false;
       globalInfo.value[currentProp] = 0;
     });
-    node.addEventListener('mousedown', (e) => {
-      e.preventDefault();
-      globalInfo.value.scrollBarMouseDown = true;
-      currentPropInfo.startX = e.pageX;
-      currentPropInfo.startY = e.pageY;
-      currentPropInfo.left = props.scrollBarInfo.left;
-      currentPropInfo.top = props.scrollBarInfo.top;
-      document.addEventListener('mousemove', mousemoveEvent);
-    });
-    document.addEventListener('mouseup', () => {
-      if (!globalInfo.value.scrollBarMouseDown) return;
-      globalInfo.value.scrollBarMouseDown = false;
-      document.removeEventListener('mousemove', mousemoveEvent);
-    });
+    bindMouseMove(node, mousedownEvent, mousemoveEvent, mouseupEvent);
   }
 });
 </script>

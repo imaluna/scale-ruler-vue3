@@ -1,6 +1,6 @@
 {
   "name": "scale-ruler-vue3",
-  "version": "1.0.0-beta",
+  "version": "1.0.0",
   "description": "A vue3 public component, supporting free movement and scaling of the canvas within the area, and includes ruler, positioning line and adsorption line functions",
   "main": "lib/index.mjs",
   "module": "lib/index.mjs",

@@ -9,13 +9,17 @@ import type {
 
 export const useTransform = (
   opt: Ref<RequiredScaleRulerOpt>,
-  containerInfo: ComputedRef<ContainerInfo>
+  containerInfo: ComputedRef<ContainerInfo>,
+  onScale: (scale: number) => void,
+  onMove: (translateX: number, translateY: number) => void
 ) => {
   const transformInfo = reactive<TransformInfo>({});
   watch(
     () => containerInfo.value,
     () => {
       const _opt = opt.value;
+      let originX = transformInfo.translateX || 0;
+      let originY = transformInfo.translateY || 0;
       let realWidth = 0;
       let realHeight = 0;
       let { scale } = _opt;
@@ -23,9 +27,8 @@ export const useTransform = (
       const { autoCenter, autoScale } = _opt;
       const { width, height } = containerInfo.value as RequiredContainerInfo;
       if (autoScale) {
-        const scaleX = (width - 2 * _opt.containerXPadding) / _opt.canvasWidth;
-        const scaleY =
-          (height - 2 * _opt.containerYPadding) / _opt.canvasHeight;
+        const scaleX = (width - 2 * 80) / _opt.canvasWidth;
+        const scaleY = (height - 2 * 80) / _opt.canvasHeight;
         scale = Math.min(scaleX, scaleY);
       }
       transformInfo.scale = scale;
@@ -39,6 +42,12 @@ export const useTransform = (
         translateY = Math.floor((height - realHeight) / 2);
         transformInfo.translateX = translateX;
         transformInfo.translateY = translateY;
+      }
+      if (_opt.scale !== scale) {
+        onScale(scale);
+      }
+      if (originX !== translateX || originY || translateY) {
+        onMove(translateX, translateY);
       }
     },
     {

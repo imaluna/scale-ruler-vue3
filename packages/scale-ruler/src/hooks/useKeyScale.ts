@@ -11,7 +11,9 @@ import { useChangeScale } from './useChangeScale';
 export const useKeyScale = (
   opt: Ref<RequiredScaleRulerOpt>,
   containerInfo: ComputedRef<ContainerInfo>,
-  transformInfo: Reactive<TransformInfo>
+  transformInfo: Reactive<TransformInfo>,
+  onScale: (scale: number) => void,
+  onMove: (translateX: number, translateY: number) => void
 ) => {
   // 代理键盘缩放
   if (opt.value.proxyScaleKey) {
@@ -22,7 +24,7 @@ export const useKeyScale = (
           e.preventDefault();
           const newScale =
             (transformInfo.scale as number) + (code === 187 ? 0.05 : -0.05);
-          useChangeScale(opt, containerInfo, transformInfo, newScale);
+          useChangeScale(opt, containerInfo, transformInfo, newScale, onScale, onMove);
         }
       }
     });

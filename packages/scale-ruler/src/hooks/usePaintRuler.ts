@@ -76,6 +76,7 @@ export const usePaintRuler = (
         ctx.restore();
         if (isY) {
           ctx.font = `${fontSize}px ${fontFamily}`;
+          ctx.fillStyle = lineColor;
           let i = startValue;
           while (i <= endValue) {
             if (i % 10) {
