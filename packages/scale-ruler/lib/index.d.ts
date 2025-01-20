@@ -93,14 +93,6 @@ rulerConfig: {
 type: PropType<RulerConfig>;
 default: Required<RulerConfig>;
 };
-adsorptionXList: {
-type: PropType<number[]>;
-default: number[];
-};
-adsorptionYList: {
-type: PropType<number[]>;
-default: number[];
-};
 }>, {
 reset: typeof reset;
 changeScale: typeof changeScale;
@@ -114,10 +106,9 @@ removeAdsorptionLine(data: number | number[], isY?: boolean): void;
 getPositionLineList: typeof getPositionLineList;
 }, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
 onMove: (...args: any[]) => void;
+adsorptionLineChange: (...args: any[]) => void;
 "update:scale": (...args: any[]) => void;
 onScale: (...args: any[]) => void;
-"update:adsorptionXList": (...args: any[]) => void;
-"update:adsorptionYList": (...args: any[]) => void;
 }, string, PublicProps, Readonly<ExtractPropTypes<    {
 scale: {
 type: NumberConstructor;
@@ -203,23 +194,12 @@ rulerConfig: {
 type: PropType<RulerConfig>;
 default: Required<RulerConfig>;
 };
-adsorptionXList: {
-type: PropType<number[]>;
-default: number[];
-};
-adsorptionYList: {
-type: PropType<number[]>;
-default: number[];
-};
 }>> & Readonly<{
 onOnMove?: ((...args: any[]) => any) | undefined;
+onAdsorptionLineChange?: ((...args: any[]) => any) | undefined;
 "onUpdate:scale"?: ((...args: any[]) => any) | undefined;
 onOnScale?: ((...args: any[]) => any) | undefined;
-"onUpdate:adsorptionXList"?: ((...args: any[]) => any) | undefined;
-"onUpdate:adsorptionYList"?: ((...args: any[]) => any) | undefined;
 }>, {
-adsorptionYList: number[];
-adsorptionXList: number[];
 scale: number;
 minScale: number;
 maxScale: number;
@@ -268,7 +248,7 @@ declare function __VLS_template(): {
         required: true;
         };
         }>> & Readonly<{
-        "onUpdate-adsorption-list"?: ((...args: any[]) => any) | undefined;
+        onAdsorptionLineChange?: ((...args: any[]) => any) | undefined;
         }>, {
         modifyAdsorptionList: (data: number | number[], isAdd?: boolean) => void;
         removeAllPositionLine: () => void;
@@ -276,7 +256,7 @@ declare function __VLS_template(): {
         toggleRuler: (show?: boolean) => void;
         getPositionLineList: () => number[];
         }, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
-        "update-adsorption-list": (...args: any[]) => void;
+        adsorptionLineChange: (...args: any[]) => void;
         }, PublicProps, {
         isY: boolean;
         }, true, {}, {}, GlobalComponents, GlobalDirectives, string, {}, any, ComponentProvideOptions, {
@@ -304,7 +284,7 @@ declare function __VLS_template(): {
         required: true;
         };
         }>> & Readonly<{
-        "onUpdate-adsorption-list"?: ((...args: any[]) => any) | undefined;
+        onAdsorptionLineChange?: ((...args: any[]) => any) | undefined;
         }>, {
         modifyAdsorptionList: (data: number | number[], isAdd?: boolean) => void;
         removeAllPositionLine: () => void;
@@ -332,7 +312,7 @@ declare function __VLS_template(): {
         required: true;
         };
         }>> & Readonly<{
-        "onUpdate-adsorption-list"?: ((...args: any[]) => any) | undefined;
+        onAdsorptionLineChange?: ((...args: any[]) => any) | undefined;
         }>, {
         modifyAdsorptionList: (data: number | number[], isAdd?: boolean) => void;
         removeAllPositionLine: () => void;
@@ -340,7 +320,7 @@ declare function __VLS_template(): {
         toggleRuler: (show?: boolean) => void;
         getPositionLineList: () => number[];
         }, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
-        "update-adsorption-list": (...args: any[]) => void;
+        adsorptionLineChange: (...args: any[]) => void;
         }, PublicProps, {
         isY: boolean;
         }, true, {}, {}, GlobalComponents, GlobalDirectives, string, {}, any, ComponentProvideOptions, {
@@ -368,7 +348,7 @@ declare function __VLS_template(): {
         required: true;
         };
         }>> & Readonly<{
-        "onUpdate-adsorption-list"?: ((...args: any[]) => any) | undefined;
+        onAdsorptionLineChange?: ((...args: any[]) => any) | undefined;
         }>, {
         modifyAdsorptionList: (data: number | number[], isAdd?: boolean) => void;
         removeAllPositionLine: () => void;
@@ -424,6 +404,8 @@ export declare interface PositionLineConfig {
     padding?: number;
     adsorptionGap?: number;
     zIndex?: number;
+    adsorptionXList?: number[];
+    adsorptionYList?: number[];
 }
 
 declare function removeAllPositionLine(): void;
@@ -469,8 +451,6 @@ export declare interface ScaleRulerOption {
     canvasStyle?: AnyRecord;
     scrollBarConfig?: ScrollBarConfig;
     rulerConfig?: RulerConfig;
-    adsorptionXList?: number[];
-    adsorptionYList?: number[];
 }
 
 export declare interface ScrollBarConfig {

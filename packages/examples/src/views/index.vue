@@ -39,15 +39,15 @@
         class="container"
         ref="scaleRulerRef"
         v-model:scale="opt.scale"
-        v-model:adsorptionXList="adsorptionXList"
-        v-model:adsorptionYList="adsorptionYList"
         :auto-scale="opt.autoScale"
         :can-scale="opt.canScale"
         :canvas-width="opt.canvasWidth"
         :canvas-height="opt.canvasHeight"
         :container-auto-size="true"
         :canvas-style="opt.canvasStyle"
+        :position-line-config="opt.positionLineConfig"
         @onMove="handleMove"
+        @adsorptionLineChange="adsorptionLineChange"
       >
         <CanvasEdit
           ref="canvasEditRef"
@@ -67,7 +67,7 @@
             ref="inputX"
             style="width: 200px"
             v-model="adsorptionX"
-            @blur="handleAdsorptionXChange"
+            @blur="handleAdsorptionXInputChange"
           ></el-input>
         </div>
         <div class="mr-10 mb-10">
@@ -76,7 +76,7 @@
             class="ml-10"
             style="width: 200px"
             v-model="adsorptionY"
-            @blur="handleAdsorptionYChange"
+            @blur="handleAdsorptionYInputChange"
           ></el-input>
         </div>
       </footer>
@@ -85,11 +85,11 @@
 </template>
 <script setup lang="ts">
 import ScaleRuler from 'scale-ruler-vue3';
+// import type { PositionLineConfig } from 'scale-ruler-vue3';
 import 'scale-ruler-vue3/lib/index.css';
 import ItemBox from '@/components/ItemBox.vue';
 import CanvasEdit from '@/components/CanvasEdit.vue';
 import type { AnyRecord } from '@/index.d';
-
 const opt = reactive<AnyRecord>({
   canvasWidth: 1920,
   canvasHeight: 1000,
@@ -98,40 +98,24 @@ const opt = reactive<AnyRecord>({
   scale: 1,
   minScale: 0.1,
   maxScale: 10,
+  positionLineConfig: {
+    adsorptionXList: [
+      100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400,
+      1500, 1600, 1700, 1800, 1900
+    ],
+    adsorptionYList: [100, 200, 300, 400, 500, 600, 700, 800, 900]
+  },
   canvasStyle: {
     backgroundColor: '#fff'
   },
   useRuler: false
 });
 
-// const adsorptionXList = ref<number[]>([
-//   100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400,
-//   1500, 1600, 1700, 1800, 1900
-// ]);
-const adsorptionXList = ref<number[]>([]);
-// const adsorptionYList = ref<number[]>([
-//   100, 200, 300, 400, 500, 600, 700, 800, 900
-// ]);
-const adsorptionYList = ref<number[]>([100]);
-const adsorptionX = ref<string>('');
-const adsorptionY = ref<string>('');
-watch(
-  () => adsorptionXList.value,
-  (newVal) => {
-    adsorptionX.value = newVal.join(',');
-  },
-  {
-    deep: true
-  }
+const adsorptionX = ref<string>(
+  opt.positionLineConfig.adsorptionXList.join(',')
 );
-watch(
-  () => adsorptionYList.value,
-  (newVal) => {
-    adsorptionY.value = newVal.join(',');
-  },
-  {
-    deep: true
-  }
+const adsorptionY = ref<string>(
+  opt.positionLineConfig.adsorptionYList.join(',')
 );
 const scaleRulerRef = ref<InstanceType<typeof ScaleRuler> | null>(null);
 
@@ -168,21 +152,37 @@ function hideAllPositionLine() {
 function formatScale(value: number) {
   return +(value * 100).toFixed(2) + '%';
 }
-function handleAdsorptionXChange() {
-  adsorptionChange(adsorptionX.value, false);
+function handleAdsorptionXInputChange() {
+  adsorptionLineCommonChange(adsorptionX.value, false);
 }
-function handleAdsorptionYChange() {
-  adsorptionChange(adsorptionY.value, true);
+function handleAdsorptionYInputChange() {
+  adsorptionLineCommonChange(adsorptionY.value, true);
 }
-function adsorptionChange(str: string, isY: boolean) {
+function adsorptionLineCommonChange(str: string, isY: boolean) {
   const list: number[] = str
     .split(',')
     .filter((item: any) => /^\d+$/.test(item))
     .map(Number);
+  // 看是否发生变化
   if (isY) {
-    adsorptionYList.value = list;
+    if (opt.positionLineConfig.adsorptionYList.join(',') === list.join(','))
+      return;
+    opt.positionLineConfig.adsorptionYList = list;
   } else {
-    adsorptionXList.value = list;
+    if (opt.positionLineConfig.adsorptionXList.join(',') === list.join(','))
+      return;
+    opt.positionLineConfig.adsorptionXList = list;
+  }
+}
+function adsorptionLineChange(value: number[], isY: boolean) {
+  const key = isY ? 'adsorptionYList' : 'adsorptionXList';
+  if (value.join(',') !== opt.positionLineConfig[key].join(',')) {
+    opt.positionLineConfig[key] = value;
+  }
+  if (isY) {
+    adsorptionY.value = value.join(',');
+  } else {
+    adsorptionX.value = value.join(',');
   }
 }
 function addAdsorptionLine(data: number[], isY: boolean) {

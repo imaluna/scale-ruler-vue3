@@ -6,7 +6,7 @@
         :opt="opt"
         :container-info="containerInfo"
         :transform-info="transformInfo"
-        @update-adsorption-list="updateAdsorptionList"
+        @adsorptionLineChange="adsorptionLineChange"
       />
       <Ruler
         ref="yRuler"
@@ -14,7 +14,7 @@
         :opt="opt"
         :container-info="containerInfo"
         :transform-info="transformInfo"
-        @update-adsorption-list="updateAdsorptionList"
+        @adsorptionLineChange="adsorptionLineChange"
       />
     </template>
     <CanvasPanel
@@ -61,7 +61,7 @@ import { useScrollBar } from '@/hooks/useScrollBar';
 import { useKeyScale } from '@/hooks/useKeyScale';
 import { useSetBoundary } from '@/hooks/useSetBoundary';
 import { useMouseWheel } from '@/hooks/useMouseWheel';
-import { useChangeScale } from '../hooks/useChangeScale';
+import { useChangeScale } from '@/hooks/useChangeScale';
 
 const props = defineProps(propsConfig);
 const opt = ref<RequiredScaleRulerOpt>(
@@ -71,8 +71,7 @@ const emit = defineEmits([
   'update:scale',
   'onScale',
   'onMove',
-  'update:adsorptionXList',
-  'update:adsorptionYList'
+  'adsorptionLineChange'
 ]);
 
 const container = ref(null);
@@ -162,8 +161,8 @@ useMouseWheel(
  * @param value
  * @param isY
  */
-function updateAdsorptionList(value: number[], isY: boolean) {
-  emit(`update:adsorption${isY ? 'Y' : 'X'}List`, value);
+function adsorptionLineChange(value: number[], isY: boolean) {
+  emit('adsorptionLineChange', value, isY);
 }
 // 还原
 function reset() {

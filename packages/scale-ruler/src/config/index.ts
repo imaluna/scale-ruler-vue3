@@ -4,7 +4,6 @@ import type {
   RequiredScaleRulerOpt,
   PositionLineConfig,
   RulerConfig,
-  ScaleRulerOption,
   ScrollBarConfig
 } from '../type';
 
@@ -39,14 +38,14 @@ export const defaultOpt: RequiredScaleRulerOpt = {
   useRuler: true,
   // 是否使用定位线
   usePositionLine: true,
-  adsorptionXList: [],
-  adsorptionYList: [],
   positionLineConfig: {
     lineColor: '#6CC6A7',
     padding: 3,
     // 吸附距离
     adsorptionGap: 4,
-    zIndex: 300
+    zIndex: 300,
+    adsorptionXList: [],
+    adsorptionYList: []
   },
   // 画布的样式
   canvasStyle: {},
@@ -178,13 +177,5 @@ export const propsConfig = {
   rulerConfig: {
     type: Object as PropType<RulerConfig>,
     default: defaultOpt.rulerConfig
-  },
-  adsorptionXList: {
-    type: Object as PropType<number[]>,
-    default: defaultOpt.adsorptionXList
-  },
-  adsorptionYList: {
-    type: Object as PropType<number[]>,
-    default: defaultOpt.adsorptionYList
   }
 };

@@ -82,9 +82,9 @@ watch(
     deep: true
   }
 );
-const emit = defineEmits(['update-adsorption-list']);
+const emit = defineEmits(['adsorptionLineChange']);
 function updateList(value: number[]) {
-  emit('update-adsorption-list', value, !props.isY);
+  emit('adsorptionLineChange', value, !props.isY);
 }
 const { adsorptionList, modifyAdsorptionList } = useAdsorption(
   opt,

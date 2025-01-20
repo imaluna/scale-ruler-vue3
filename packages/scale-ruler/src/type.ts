@@ -20,8 +20,6 @@ export interface ScaleRulerOption {
   canvasStyle?: AnyRecord;
   scrollBarConfig?: ScrollBarConfig;
   rulerConfig?: RulerConfig;
-  adsorptionXList?: number[];
-  adsorptionYList?: number[];
 }
 export interface PositionLineConfig {
   lineColor?: string;
@@ -29,8 +27,8 @@ export interface PositionLineConfig {
   // 吸附距离
   adsorptionGap?: number;
   zIndex?: number;
-  // adsorptionXList?: number[];
-  // adsorptionYList?: number[];
+  adsorptionXList?: number[];
+  adsorptionYList?: number[];
 }
 export interface ScrollBarConfig {
   bgColor?: string;

@@ -11,11 +11,12 @@ export const useAdsorption = (
   updateList: (value: number[]) => void
 ) => {
   const originList = computed(() =>
-    opt.value[isY ? 'adsorptionYList' : 'adsorptionXList'].sort()
+    sortByAsc(
+      opt.value.positionLineConfig[isY ? 'adsorptionYList' : 'adsorptionXList']
+    )
   );
-  const adsorptionList = reactive<number[]>([]);
+  const adsorptionList = reactive<number[]>(originList.value);
   addAdsorptionList(0);
-  addAdsorptionList(originList.value);
   function modifyAdsorption(num: number, isAdd: boolean = true) {
     const index = adsorptionList.indexOf(num);
     if (isAdd && index === -1) {
