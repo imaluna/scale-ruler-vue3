@@ -56,7 +56,7 @@ const opt = reactive({
 ```
 [参考代码](https://github.com/imaluna/scale-ruler-vue3/blob/5c4d6c84dbf9b15e821ddbe43dd0e464eed304b9/packages/examples/src/App.vue#L26)
 
-## Attributes
+## 属性
 
 | 参数 | 说明 | 类型 | 默认值 | 备注
 | --- | --- | --- | --- |--- |
@@ -84,7 +84,7 @@ const opt = reactive({
 
 
 
-### scrollBarConfig params
+### scrollBarConfig 参数
 
 | 参数 | 说明 | 类型 | 默认值 | 备注
 | --- | --- | --- | --- |--- |
@@ -93,7 +93,7 @@ const opt = reactive({
 | zIndex	| 滚动条堆叠顺序 | Number | 500| |
 | size	| 水平滚动条的高度或垂直滚动条的宽度 | Number | 8| |
 
-### rulerConfig params
+### rulerConfig 参数
 
 | 参数 | 说明 | 类型 | 默认值 | 备注
 | --- | --- | --- | --- |--- |
@@ -106,7 +106,7 @@ const opt = reactive({
 | lineColor	| 标尺刻度颜色 |String | #000000| |
 | zIndex	| 标尺堆叠顺序 | Number | 400| |
 
-### positionLineConfig params
+### positionLineConfig 参数
 
 | 参数 | 说明 | 类型 | 默认值 | 备注
 | --- | --- | --- | --- |--- |
