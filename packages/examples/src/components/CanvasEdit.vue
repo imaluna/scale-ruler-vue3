@@ -7,7 +7,6 @@
       :key="item.id"
       :style="getStyle(item)"
       @mousedown.stop="(e: MouseEvent) => handleSelect(e, item)"
-      @keydown.stop="handleKeyDown"
     >
       <div class="move-box" @mousedown="handleMouseDown"></div>
     </div>
@@ -34,11 +33,7 @@ const props = defineProps({
   }
 });
 const store = useEditStore();
-const emit = defineEmits([
-  'getPositionLineList',
-  'removeAdsorptionLine',
-  'addAdsorptionLine'
-]);
+const emit = defineEmits(['removeAdsorptionLine', 'addAdsorptionLine']);
 const { positionLineXList, positionLineYList } = toRefs(props);
 const itemList = store.getItemList;
 
@@ -54,7 +49,7 @@ function getStyle(item: ItemType) {
  * 初始化canvasEdit的rect
  */
 const canvasEditRef = ref(null);
-const rectInfo = reactive<RectType>({
+const canvasEditRectInfo = reactive<RectType>({
   width: 0,
   height: 0,
   top: 0,
@@ -65,11 +60,11 @@ function updateRect() {
     if (canvasEditRef.value) {
       let node = canvasEditRef.value as HTMLElement;
       const rect = node.getBoundingClientRect();
-      rectInfo.top = rect.top;
-      rectInfo.left = rect.left;
-      rectInfo.width = rect.width;
-      rectInfo.height = rect.height;
-      store.setCanvasRect(rectInfo);
+      canvasEditRectInfo.top = rect.top;
+      canvasEditRectInfo.left = rect.left;
+      canvasEditRectInfo.width = rect.width;
+      canvasEditRectInfo.height = rect.height;
+      store.setCanvasRect(canvasEditRectInfo);
     }
   }, 300);
 }
@@ -98,8 +93,11 @@ function handleMouseDown(e: MouseEvent) {
   cacheInfo.y = currentItem.value?.y;
   cacheInfo.startX = e.pageX;
   cacheInfo.startY = e.pageY;
-  emit('getPositionLineList');
+  const rect = currentNode.getBoundingClientRect();
+  cacheInfo.width = rect.width;
+  cacheInfo.height = rect.height;
   document.addEventListener('mousemove', mouseMoveEvent);
+  document.addEventListener('keydown', handleKeyDown);
 }
 function mouseMoveEvent(e: MouseEvent) {
   if (!isMouseDown.value) return;
@@ -115,62 +113,94 @@ document.addEventListener('mouseup', (e: MouseEvent) => {
   if (isMouseDown.value) {
     isMouseDown.value = false;
     document.removeEventListener('mousemove', mouseMoveEvent);
-    if (currentNode) {
-      const x = e.pageX;
-      const y = e.pageY;
-      const rect = currentNode.getBoundingClientRect();
-      if (
-        rect.top <= y &&
-        rect.left <= x &&
-        rect.top + rect.height >= y &&
-        rect.left + rect.width >= x
-      ) {
-        if (currentItem.value) {
-          const _x = getInt(checkAdSorptionLine(currentItem.value.x, false));
-          const _y = getInt(checkAdSorptionLine(currentItem.value.y, true));
-          currentItem.value.x = _x;
-          currentItem.value.y = _y;
-          // 移除之前的吸附线
-          const oldXList = [cacheInfo.x, cacheInfo.x + currentItem.value.width];
-          const oldYList = [
-            cacheInfo.y,
-            cacheInfo.y + currentItem.value.height
-          ];
-
-          const xList = [_x, _x + currentItem.value.width];
-          const yList = [_y, _y + currentItem.value.height];
-          store.setItemAdsorption(xList, false);
-          store.setItemAdsorption(yList, true);
-          const removeXList = store.removeItemAdsorption(oldXList, false);
-          const removeYList = store.removeItemAdsorption(oldYList, true);
-          // 检查是否需要删除吸附线
-          removeAdSorptionLine(removeXList, removeYList);
-          // 新增吸附线
-          emit('addAdsorptionLine', xList, false);
-          emit('addAdsorptionLine', yList, true);
-        }
-      } else {
-        currentNode = null;
-        currentItem.value = null;
+  }
+  if (currentNode) {
+    const x = e.pageX;
+    const y = e.pageY;
+    const rect = currentNode.getBoundingClientRect();
+    if (
+      rect.top <= y &&
+      rect.left <= x &&
+      rect.top + rect.height >= y &&
+      rect.left + rect.width >= x
+    ) {
+      if (currentItem.value) {
+        const _x = getInt(checkAdSorptionLine(currentItem.value.x, false));
+        const _y = getInt(checkAdSorptionLine(currentItem.value.y, true));
+        changeAdsorptionLine(_x, cacheInfo.x, currentItem.value.width, false);
+        changeAdsorptionLine(_y, cacheInfo.y, currentItem.value.height, true);
       }
+    } else {
+      document.removeEventListener('keydown', handleKeyDown);
+      currentNode = null;
+      currentItem.value = null;
     }
   }
 });
-/**
- * 键盘事件
- */
-function handleKeyDown(e: KeyboardEvent) {
-  console.log(e);
-}
-function removeAdSorptionLine(removeXList: number[], removeYList: number[]) {
-  if (removeXList.length > 0) {
-    emit('removeAdsorptionLine', removeXList, false);
+function changeAdsorptionLine(
+  newVal: number,
+  oldVal: number,
+  size: number,
+  isY: boolean
+) {
+  if (currentItem.value) {
+    if (newVal !== oldVal) {
+      currentItem.value[isY ? 'y' : 'x'] = newVal;
+      const oldList = [oldVal, getInt(oldVal + size)];
+      const newList = [newVal, getInt(newVal + size)];
+      // 添加新的吸附线
+      store.setItemAdsorption(newList, isY);
+      // 删除旧吸附线，并检查是否需要父组件删除吸附线
+      const removeList = store.removeItemAdsorption(oldList, isY);
+      if (removeList.length > 0) {
+        emit('removeAdsorptionLine', removeList, isY);
+      }
+      emit('addAdsorptionLine', newList, isY);
+    }
   }
-  if (removeYList.length > 0) {
-    emit('removeAdsorptionLine', removeYList, true);
+}
+/**
+ * 选中元素时的键盘事件
+ * 上下左右移动，改变元素的位置
+ */
+const directionCodeList = ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'];
+function handleKeyDown(e: KeyboardEvent) {
+  // 有选中
+  if (currentNode && directionCodeList.includes(e.code)) {
+    e.preventDefault();
+    const { code } = e;
+    const { x, y, width, height } = cacheInfo;
+    let newVal = x,
+      isY = false;
+    switch (code) {
+      case directionCodeList[0]:
+        newVal = x + 1;
+        break;
+      case directionCodeList[1]:
+        newVal = x - 1;
+        break;
+      case directionCodeList[2]:
+        newVal = y - 1;
+        isY = true;
+        break;
+      default:
+        isY = true;
+        newVal = y + 1;
+    }
+
+    changeAdsorptionLine(
+      getInt(newVal),
+      isY ? y : x,
+      isY ? height : width,
+      isY
+    );
+    cacheInfo[isY ? 'y' : 'x'] = newVal;
   }
 }
 
+/**
+ * 检查是否需要吸附
+ */
 function checkAdSorptionLine(coordinate: number, isY: boolean) {
   const list = isY ? positionLineYList.value : positionLineXList.value;
   for (let i = 0; i < list.length; i++) {

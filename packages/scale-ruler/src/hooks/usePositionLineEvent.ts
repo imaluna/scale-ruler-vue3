@@ -10,7 +10,8 @@ import type { Ref } from 'vue';
 import {
   translateToCoordinate,
   checkAdSorptionLine,
-  coordinateToTranslate
+  coordinateToTranslate,
+  getRectInfo
 } from '@/utils';
 import { bindMouseMove } from 'common';
 
@@ -22,9 +23,11 @@ export const usePositionLineEvent = (
   isY: boolean,
   positionLineRef: Ref,
   lineInfo: Ref<AnyRecord>,
-  removeCallback: (id: string | number) => void
+  removeCallback: (id: string | number) => void,
+  positionLineChange: () => void
 ) => {
   let isMouseDown = false;
+  const removeIconInfo = reactive<AnyRecord>({});
   function toggleTip(show: boolean) {
     lineInfo.value.showTip = show;
   }
@@ -71,7 +74,6 @@ export const usePositionLineEvent = (
     ) {
       removeCallback(id);
     } else {
-      toggleTip(false);
       const checkInfo = checkAdSorptionLine(
         adsorptionList.value,
         transformInfo.value,
@@ -82,7 +84,12 @@ export const usePositionLineEvent = (
       );
       lineInfo.value.coordinate = checkInfo.coordinate;
       lineInfo.value.translate = checkInfo.translate;
+      positionLineChange();
     }
+  }
+  function clickEvent() {
+    removeIconInfo.show = false;
+    document.removeEventListener('click', clickEvent);
   }
   onMounted(() => {
     if (positionLineRef.value) {
@@ -95,8 +102,18 @@ export const usePositionLineEvent = (
           toggleTip(false);
         }
       });
-
+      // 右键出现删除
+      node.addEventListener('contextmenu', (e: MouseEvent) => {
+        e.preventDefault();
+        let left: number = e.pageX + 10;
+        let top: number = e.pageY - (isY ? 20 : 10);
+        removeIconInfo.top = top;
+        removeIconInfo.left = left;
+        removeIconInfo.show = true;
+        document.addEventListener('click', clickEvent);
+      });
       bindMouseMove(node, mousedownEvent, mousemoveEvent, mouseupEvent);
     }
   });
+  return { removeIconInfo };
 };

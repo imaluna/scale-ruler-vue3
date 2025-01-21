@@ -56,11 +56,7 @@ interface StartRectType {
 const startRect = reactive<Partial<StartRectType>>({});
 const store = useEditStore();
 const canvasRect = computed(() => store.getCanvasReact);
-const emit = defineEmits([
-  'getContainer',
-  'getPositionLineList',
-  'addAdsorptionLine'
-]);
+const emit = defineEmits(['getContainer', 'addAdsorptionLine']);
 const { positionLineXList, positionLineYList } = toRefs(props);
 const currentItem = ref<ItemType | null>(null);
 
@@ -79,7 +75,6 @@ function handleMouseDown(e: MouseEvent, item: ComponentItem) {
     y: rect.top,
     id: store.getId
   } as ItemType;
-  emit('getPositionLineList');
   document.addEventListener('mousemove', moveEvent);
 }
 

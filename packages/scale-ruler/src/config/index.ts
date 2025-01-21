@@ -1,11 +1,4 @@
-import type { PropType } from 'vue';
-import type {
-  AnyRecord,
-  RequiredScaleRulerOpt,
-  PositionLineConfig,
-  RulerConfig,
-  ScrollBarConfig
-} from '../type';
+import type { AnyRecord, RequiredScaleRulerOpt } from '../type';
 
 export const defaultOpt: RequiredScaleRulerOpt = {
   // 画布缩放比例
@@ -45,7 +38,10 @@ export const defaultOpt: RequiredScaleRulerOpt = {
     adsorptionGap: 4,
     zIndex: 300,
     adsorptionXList: [],
-    adsorptionYList: []
+    adsorptionYList: [],
+    useRemove: true,
+    removeIcon: '',
+    removeIconFillColor: '#525252'
   },
   // 画布的样式
   canvasStyle: {},
@@ -92,90 +88,3 @@ export const defaultProps = (function () {
   }
   return res;
 })();
-
-export const propsConfig = {
-  scale: {
-    type: Number,
-    default: defaultOpt.scale
-  },
-  minScale: {
-    type: Number,
-    default: defaultOpt.minScale
-  },
-  maxScale: {
-    type: Number,
-    default: defaultOpt.maxScale
-  },
-  canScale: {
-    type: Boolean,
-    default: defaultOpt.canScale
-  },
-  autoCenter: {
-    type: Boolean,
-    default: defaultOpt.autoCenter
-  },
-  autoScale: {
-    type: Boolean,
-    default: defaultOpt.autoScale
-  },
-  containerAutoSize: {
-    type: Boolean,
-    default: defaultOpt.containerAutoSize
-  },
-  containerWidth: {
-    type: Number,
-    default: defaultOpt.containerWidth
-  },
-  containerHeight: {
-    type: Number,
-    default: defaultOpt.containerHeight
-  },
-  containerXPadding: {
-    type: Number,
-    default: defaultOpt.containerXPadding
-  },
-  containerYPadding: {
-    type: Number,
-    default: defaultOpt.containerYPadding
-  },
-  canvasWidth: {
-    type: Number,
-    default: defaultOpt.canvasWidth
-  },
-  canvasHeight: {
-    type: Number,
-    default: defaultOpt.canvasHeight
-  },
-  proxyScaleKey: {
-    type: Boolean,
-    default: defaultOpt.proxyScaleKey
-  },
-  useScrollBar: {
-    type: Boolean,
-    default: defaultOpt.useScrollBar
-  },
-  useRuler: {
-    type: Boolean,
-    default: defaultOpt.useRuler
-  },
-  usePositionLine: {
-    type: Boolean,
-    default: defaultOpt.usePositionLine
-  },
-  positionLineConfig: {
-    type: Object as PropType<PositionLineConfig>,
-    default: defaultOpt.positionLineConfig
-  },
-  canvasStyle: {
-    type: Object as PropType<AnyRecord>,
-    default: defaultOpt.canvasStyle
-  },
-  scrollBarConfig: {
-    type: Object as PropType<ScrollBarConfig>,
-    default: defaultOpt.scrollBarConfig
-  },
-  rulerConfig: {
-    type: Object as PropType<RulerConfig>,
-    default: defaultOpt.rulerConfig
-  }
-};

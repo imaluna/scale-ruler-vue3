@@ -71,8 +71,8 @@ const opt = reactive({
 | containerAutoSize	| Whether to automatically calculate the width and height of the container | Boolean | true |If true, it will monitor the changes of container width and height and repaint the canvas and ruler|
 | containerWidth	| Container width | Number | 1000 |If <code>containerAutoSize</code> is true, this value does not take effect |
 | containerHeight	| Container height | Number | 500 |If <code>containerAutoSize</code> is true, this value does not take effect|
-| containerXPadding	| The left and right padding between the container and the canvas in the x-direction/horizontal direction | Number | 80 ||
-| containerYPadding	| The top and bottom padding between the container and the canvas in the y-direction/vertical direction  | Number | 80 ||
+| containerXPadding	| The left and right padding between the container and the canvas in the x-direction/horizontal direction | Number | 800 ||
+| containerYPadding	| The top and bottom padding between the container and the canvas in the y-direction/vertical direction  | Number | 800 ||
 | canvasWidth	| Canvas width | Number | 1920 ||
 | canvasHeight	| Canvas height | Number | 1000 ||
 | canvasStyle	| The style of canvas | Object | {} ||
@@ -118,13 +118,20 @@ const opt = reactive({
 | adsorptionYList	| The list of adsorption in y/vertical direction |Array<Number> | [0, canvasHeight]| |
 | adsorptionGap	| The gap to adsorb | Number | 4| |
 | zIndex	| zIndex | Number | 300| |
+| useRightKeyRemove	| Whether to enable right key delete the position line | boolean | true| |
+| removeIcon	| The component of remove-icon | Component |  | If <code>useRightKeyRemove</code> is true, the value of <code>removeIcon</code> will effective;If <code>removeIcon</code>is empty, the default component of icon will effective|
+|removeIconFillColor|The fill-color of remove-icon| string|#525252||
+
 
 ## Events
 
 | Methods Name	 | Description | Parameters
 | --- | --- | --- |
-| onScale	| triggers when scaling the canvas | scale | 
-| onMove	| triggers when moving the canvas | translateX, translateY |
+| onScale	| triggers when scaling the canvas | scale: number | 
+| onMove	| triggers when moving the canvas | translateX: number, translateY: number |
+| adsorptionLineChange	| triggers when adsorption line(s) change(s) | value: number[], isY: boolean|
+| positionLineChange	| triggers when position line(s) change(s) | value: number[], isY: boolean|
+
 
 ## Methods
 
@@ -139,7 +146,6 @@ const opt = reactive({
 | hideAllPositionLine	| hide all the position line(s) | - | 
 | addAdsorptionLine	| add adsorption line(s) | (data: number \| Array<number>- the value of adsorption line, isY: boolean -Whether it is in the y/vertical direction) | 
 | removeAdsorptionLine	| remove adsorption line(s)  | (data: number \| Array<number>- the value of adsorption line, isY: boolean -Whether it is in the y/vertical direction)| 
-
 
 
 

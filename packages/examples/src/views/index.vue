@@ -5,13 +5,16 @@
         :scale="opt.scale"
         :positionLineXList="positionLineXList"
         :positionLineYList="positionLineYList"
-        @getPositionLineList="getPositionLineList"
         @addAdsorptionLine="addAdsorptionLine"
       />
     </aside>
     <main>
       <header>
         <div class="mr-10 mb-10">
+          <el-button link @click="guideVisible = true">
+            <el-icon><InfoFilled /></el-icon>
+            <span>查看操作指引</span>
+          </el-button>
           <el-button @click="hideRuler">隐藏标尺</el-button>
           <el-button @click="showRuler">显示标尺</el-button>
           <el-button @click="hideAllPositionLine">隐藏定位线</el-button>
@@ -19,20 +22,6 @@
           <el-button @click="removeAllPositionLine">删除定位线</el-button>
           <el-button class="mr-10" @click="handleReset">还原</el-button>
         </div>
-        <div class="mb-10 mr-20">
-          <span class="text">{{ opt.canScale ? '允许' : '禁止' }}缩放</span>
-          <el-switch class="ml-10" v-model="opt.canScale" />
-        </div>
-        <el-slider
-          class="mr-10 mb-10"
-          style="width: 150px"
-          v-model="opt.scale"
-          :disabled="!opt.canScale"
-          :format-tooltip="formatScale"
-          :min="opt.minScale"
-          :max="opt.maxScale"
-          :step="0.05"
-        />
       </header>
       <ScaleRuler
         id="scale-ruler-container"
@@ -48,18 +37,32 @@
         :position-line-config="opt.positionLineConfig"
         @onMove="handleMove"
         @adsorptionLineChange="adsorptionLineChange"
+        @positionLineChange="positionLineChange"
       >
         <CanvasEdit
           ref="canvasEditRef"
           :scale="opt.scale"
           :positionLineXList="positionLineXList"
           :positionLineYList="positionLineYList"
-          @getPositionLineList="getPositionLineList"
           @removeAdsorptionLine="removeAdsorptionLine"
           @addAdsorptionLine="addAdsorptionLine"
         />
       </ScaleRuler>
       <footer>
+        <div class="mb-10 mr-20">
+          <span class="text">{{ opt.canScale ? '允许' : '禁止' }}缩放</span>
+          <el-switch class="ml-10" v-model="opt.canScale" />
+        </div>
+        <el-slider
+          class="mr-10 mb-10"
+          style="width: 150px"
+          v-model="opt.scale"
+          :disabled="!opt.canScale"
+          :format-tooltip="formatScale"
+          :min="opt.minScale"
+          :max="opt.maxScale"
+          :step="0.05"
+        />
         <div class="mr-10 mb-10">
           <span class="text">吸附线x:</span>
           <el-input
@@ -81,15 +84,27 @@
         </div>
       </footer>
     </main>
+    <el-dialog v-model="guideVisible" title="操作指引">
+      <p>1. 画布放大操作：</p>
+      <p>&nbsp;(1) 按键： ctrl/command + "+"</p>
+      <p>&nbsp;(2) 触摸板：双指放大</p>
+      <p>2. 画布缩小操作：</p>
+      <p>&nbsp;(1) 按键： ctrl/command + "-"</p>
+      <p>&nbsp;(2) 触摸板：双指缩小</p>
+      <p>3. 画布移动</p>
+      <p>&nbsp;(1) 触摸板双指上下左右移动</p>
+      <p>&nbsp;(2) 开启滚动条功能后使用滚动条移动</p>
+      <p>&nbsp;(3) 鼠标滚动</p>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
 import ScaleRuler from 'scale-ruler-vue3';
-// import type { PositionLineConfig } from 'scale-ruler-vue3';
 import 'scale-ruler-vue3/lib/index.css';
 import ItemBox from '@/components/ItemBox.vue';
 import CanvasEdit from '@/components/CanvasEdit.vue';
 import type { AnyRecord } from '@/index.d';
+import { InfoFilled } from '@element-plus/icons-vue';
 const opt = reactive<AnyRecord>({
   canvasWidth: 1920,
   canvasHeight: 1000,
@@ -211,12 +226,17 @@ function handleMove() {
  */
 const positionLineXList = ref<number[]>([]);
 const positionLineYList = ref<number[]>([]);
-function getPositionLineList() {
-  if (scaleRulerRef.value) {
-    positionLineXList.value = scaleRulerRef.value.getPositionLineList(false);
-    positionLineYList.value = scaleRulerRef.value.getPositionLineList(true);
+function positionLineChange(value: number[], isY: boolean) {
+  if (isY) {
+    positionLineYList.value = value;
+  } else {
+    positionLineXList.value = value;
   }
 }
+/**
+ * 指引弹窗
+ */
+const guideVisible = ref(false);
 </script>
 <style lang="scss">
 body,

@@ -15,7 +15,9 @@ export default defineConfig({
     vueDevTools(),
     // 自动导入依赖
     AutoImport({
-      resolvers: [ElementPlusResolver()],
+      resolvers: [
+        ElementPlusResolver(),
+      ],
       imports: ['vue', 'vue-router']
     }),
     Components({

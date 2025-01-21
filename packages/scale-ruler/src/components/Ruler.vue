@@ -19,7 +19,8 @@
       :container-info="props.containerInfo"
       :line-info="positionLineMap[id]"
       :adsorption-list="adsorptionList"
-      @remove-position-line="handleRemove"
+      @removePositionLine="handleRemove"
+      @positionLineChange="positionLineChange"
     />
   </div>
 </template>
@@ -82,14 +83,18 @@ watch(
     deep: true
   }
 );
-const emit = defineEmits(['adsorptionLineChange']);
-function updateList(value: number[]) {
+const emit = defineEmits(['adsorptionLineChange', 'positionLineChange']);
+/**
+ * 更新吸附线
+ */
+function updateAbsorptionLineList(value: number[]) {
   emit('adsorptionLineChange', value, !props.isY);
 }
+
 const { adsorptionList, modifyAdsorptionList } = useAdsorption(
   opt,
   !props.isY,
-  updateList
+  updateAbsorptionLineList
 );
 const { positionLineMap } = useAddPositionLine(
   opt,
@@ -97,10 +102,21 @@ const { positionLineMap } = useAddPositionLine(
   adsorptionList,
   transformInfo,
   !props.isY,
-  rulerRef
+  rulerRef,
+  positionLineChange
 );
+function positionLineChange() {
+  const list: number[] = positionLineMap
+    .filter((item: AnyRecord) => !!item.show)
+    .map((item: AnyRecord) => item.coordinate);
+  emit('positionLineChange', list, !props.isY);
+}
+/**
+ * 删除单个定位线
+ */
 function handleRemove(id: number | string) {
   delete positionLineMap[id];
+  positionLineChange();
 }
 
 /**
@@ -110,6 +126,7 @@ function removeAllPositionLine() {
   Object.keys(positionLineMap).forEach((id) => {
     handleRemove(id);
   });
+  positionLineChange();
 }
 
 /**
@@ -119,6 +136,7 @@ function togglePositionLine(show: boolean = true) {
   Object.keys(positionLineMap).forEach((id) => {
     positionLineMap[id].show = show;
   });
+  positionLineChange();
 }
 const showRuler = ref(true);
 /**
@@ -128,17 +146,11 @@ function toggleRuler(show: boolean = true) {
   showRuler.value = show;
   togglePositionLine(show);
 }
-function getPositionLineList(): number[] {
-  return positionLineMap
-    .filter((item: AnyRecord) => !!item)
-    .map((item: AnyRecord) => item.coordinate as number)
-    .sort((a: number, b: number) => a - b);
-}
+
 defineExpose({
   modifyAdsorptionList,
   removeAllPositionLine,
   togglePositionLine,
-  toggleRuler,
-  getPositionLineList
+  toggleRuler
 });
 </script>

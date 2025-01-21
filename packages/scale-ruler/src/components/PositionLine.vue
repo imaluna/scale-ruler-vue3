@@ -9,10 +9,18 @@
       {{ (isY ? 'Y' : 'X') + ': ' + +lineInfo.coordinate.toFixed(2) + ' px' }}
     </div>
   </div>
+  <RemoveIconComp
+    v-show="removeIconInfo.show"
+    class="scale-ruler_position-line_remove"
+    :style="removeIconStyle"
+    :fill-color="opt.positionLineConfig.removeIconFillColor"
+    @click="remove(lineInfo.id)"
+  />
 </template>
 <script setup lang="ts">
 import { computed, toRefs, ref, onMounted } from 'vue';
-import type { PropType } from 'vue';
+import type { PropType, Component } from 'vue';
+import RemoveIcon from './RemoveIcon.vue';
 import type {
   AnyRecord,
   RequiredScaleRulerOpt,
@@ -49,10 +57,16 @@ const props = defineProps({
     required: true
   }
 });
+
 const { lineInfo, adsorptionList, transformInfo, opt, containerInfo } =
   toRefs(props);
 const padding = computed((): number => opt.value.positionLineConfig.padding);
 const lineSize = computed((): number => 2 * padding.value + 1);
+// 移除icon
+const RemoveIconComp = computed(
+  (): Component =>
+    (opt.value.positionLineConfig.removeIcon || RemoveIcon) as Component
+);
 
 const translate = computed((): number =>
   coordinateToTranslate(
@@ -69,7 +83,6 @@ const wrapStyle = computed((): AnyRecord => {
     : `translate(${translate.value}px, 0)`;
   return {
     display: lineInfo.value.show ? 'block' : 'none',
-    position: 'absolute',
     width: (isY ? width : lineSize.value) + 'px',
     height: (isY ? lineSize.value : height) + 'px',
     cursor: isY ? 'row-resize' : 'col-resize',
@@ -83,7 +96,6 @@ const wrapStyle = computed((): AnyRecord => {
 const lineStyle = computed((): AnyRecord => {
   const { isY } = props;
   return {
-    position: 'absolute',
     width: isY ? '100%' : '1px',
     height: isY ? '1px' : '100%',
     backgroundColor: opt.value.positionLineConfig.lineColor,
@@ -114,7 +126,6 @@ const tipStyle = computed((): AnyRecord => {
   }
   const transform = isY ? 'translate(-50%, 0)' : 'translate(0, -50%)';
   return {
-    position: 'absolute',
     padding: '5px',
     lineHeight: '18px',
     minWidth: '80px',
@@ -131,14 +142,17 @@ const tipStyle = computed((): AnyRecord => {
   };
 });
 const positionLineRef = ref(null);
-const emit = defineEmits(['remove-position-line']);
+const emit = defineEmits(['removePositionLine', 'positionLineChange']);
 /**
  * 删除定位线
  */
 function remove(id: number | string) {
-  emit('remove-position-line', id);
+  emit('removePositionLine', id);
 }
-usePositionLineEvent(
+function positionLineChange() {
+  emit('positionLineChange');
+}
+const { removeIconInfo } = usePositionLineEvent(
   opt,
   containerInfo,
   adsorptionList,
@@ -146,8 +160,17 @@ usePositionLineEvent(
   props.isY,
   positionLineRef,
   lineInfo,
-  remove
+  remove,
+  positionLineChange
 );
+
+const removeIconStyle = computed((): AnyRecord => {
+  return {
+    top: removeIconInfo.top + 'px',
+    left: removeIconInfo.left + 'px'
+  };
+});
+
 const tipRef = ref(null);
 onMounted(() => {
   if (tipRef.value) {
@@ -159,3 +182,18 @@ onMounted(() => {
   }
 });
 </script>
+<style lang="scss" scoped>
+.scale-ruler_position-line,
+.scale-ruler_position-line_inner,
+.scale-ruler_position-line_tip,
+.scale-ruler_position-line_remove {
+  position: absolute;
+  z-index: 1000;
+}
+.scale-ruler_position-line_remove {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+</style>

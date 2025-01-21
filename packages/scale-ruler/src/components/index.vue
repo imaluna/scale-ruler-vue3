@@ -7,6 +7,7 @@
         :container-info="containerInfo"
         :transform-info="transformInfo"
         @adsorptionLineChange="adsorptionLineChange"
+        @positionLineChange="positionLineChange"
       />
       <Ruler
         ref="yRuler"
@@ -15,6 +16,7 @@
         :container-info="containerInfo"
         :transform-info="transformInfo"
         @adsorptionLineChange="adsorptionLineChange"
+        @positionLineChange="positionLineChange"
       />
     </template>
     <CanvasPanel
@@ -48,13 +50,18 @@
 
 <script setup lang="ts">
 import { defineProps, ref, watch, reactive } from 'vue';
-import type { RequiredScaleRulerOpt, TransformInfo, AnyRecord } from '@/type';
+import type {
+  RequiredScaleRulerOpt,
+  ScaleRulerOption,
+  TransformInfo,
+  AnyRecord
+} from '@/type';
 import { arrayMerge } from '@/utils';
 import CanvasPanel from './CanvasPanel.vue';
 import ScrollBar from './ScrollBar.vue';
 import Ruler from './Ruler.vue';
 import deepmerge from 'deepmerge';
-import { defaultOpt, propsConfig } from '@/config';
+import { defaultOpt, defaultProps } from '@/config';
 import { useContainer } from '@/hooks/useContainer';
 import { useTransform } from '@/hooks/useTransform';
 import { useScrollBar } from '@/hooks/useScrollBar';
@@ -63,7 +70,7 @@ import { useSetBoundary } from '@/hooks/useSetBoundary';
 import { useMouseWheel } from '@/hooks/useMouseWheel';
 import { useChangeScale } from '@/hooks/useChangeScale';
 
-const props = defineProps(propsConfig);
+const props = withDefaults(defineProps<ScaleRulerOption>(), defaultProps);
 const opt = ref<RequiredScaleRulerOpt>(
   deepmerge(defaultOpt, props, { arrayMerge }) as RequiredScaleRulerOpt
 );
@@ -71,7 +78,8 @@ const emit = defineEmits([
   'update:scale',
   'onScale',
   'onMove',
-  'adsorptionLineChange'
+  'adsorptionLineChange',
+  'positionLineChange'
 ]);
 
 const container = ref(null);
@@ -164,7 +172,15 @@ useMouseWheel(
 function adsorptionLineChange(value: number[], isY: boolean) {
   emit('adsorptionLineChange', value, isY);
 }
-// 还原
+/**
+ * 更新定位线
+ */
+function positionLineChange(value: number, isY: boolean) {
+  emit('positionLineChange', value, isY);
+}
+/**
+ * 还原
+ *  */
 function reset() {
   Object.assign(transformInfo, originTransform);
 }
@@ -221,24 +237,6 @@ function modifyAdsorptionList(
     }
   }
 }
-/**
- * 获取所有定位线的坐标
- */
-function getPositionLineList(isY: boolean): number[] {
-  let result: number[] = [];
-  if (opt.value.useRuler) {
-    if (isY) {
-      if (xRuler.value) {
-        result = xRuler.value.getPositionLineList();
-      }
-    } else {
-      if (yRuler.value) {
-        result = yRuler.value.getPositionLineList();
-      }
-    }
-  }
-  return result;
-}
 
 defineExpose({
   reset,
@@ -261,8 +259,7 @@ defineExpose({
   },
   removeAdsorptionLine(data: number | number[], isY: boolean = false) {
     modifyAdsorptionList(data, false, isY);
-  },
-  getPositionLineList
+  }
 });
 </script>
 <style lang="scss">

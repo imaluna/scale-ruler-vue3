@@ -114,13 +114,20 @@ const opt = reactive({
 | adsorptionYList	| y/垂直方向吸附线 |Array<Number> | [0, canvasHeight]| |
 | adsorptionGap	| 吸附距离 | Number | 4| |
 | zIndex	| 堆叠顺序 | Number | 300| |
+| useRightKeyRemove	| 是否使用右键删除定位线 | boolean | true| |
+| removeIcon	| 定位线删除icon组件 | Component |  | 如果<code>useRightKeyRemove</code>为true,<code>removeIcon</code>生效;如果<code>removeIcon</code>为空，将会使用组件默认的移除icon|
+|removeIconFillColor|删除icon组件的填充色| string|#525252||
+
 
 ## 事件
 
 | 事件名 | 说明 | 回调参数
 | --- | --- | --- |
-| onScale	| 缩放画布时触发的事件 | scale | 
-| onMove	| 移动画布时触发的事件 | translateX, translateY |
+| onScale	| 缩放画布时触发的事件 | scale: number | 
+| onMove	| 移动画布时触发的事件 | translateX: number, translateY: number |
+| adsorptionLineChange	| 吸附线变化时触发的事件 | value: number[], isY: boolean|
+| positionLineChange	| 定位线变化时触发的事件 | value: number[], isY: boolean|
+
 
 ## 方法
 

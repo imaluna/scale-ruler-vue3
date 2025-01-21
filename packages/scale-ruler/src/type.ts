@@ -1,3 +1,5 @@
+import type { Component } from 'vue';
+
 export interface ScaleRulerOption {
   scale?: number;
   minScale?: number;
@@ -29,6 +31,9 @@ export interface PositionLineConfig {
   zIndex?: number;
   adsorptionXList?: number[];
   adsorptionYList?: number[];
+  useRemove?: boolean;
+  removeIcon?: string | Component;
+  removeIconFillColor?: string;
 }
 export interface ScrollBarConfig {
   bgColor?: string;

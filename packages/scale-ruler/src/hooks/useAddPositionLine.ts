@@ -7,7 +7,11 @@ import type {
   RequiredContainerInfo
 } from '@/type';
 import type { Reactive, Ref } from 'vue';
-import { getOffset, translateToCoordinate, checkAdSorptionLine } from '@/utils';
+import {
+  getRectInfo,
+  translateToCoordinate,
+  checkAdSorptionLine
+} from '@/utils';
 import { bindMouseMove } from 'common';
 
 export const useAddPositionLine = (
@@ -16,7 +20,8 @@ export const useAddPositionLine = (
   adsorptionList: Reactive<number[]>,
   transformInfo: Ref<TransformInfo>,
   isY: boolean,
-  rulerRef: Ref
+  rulerRef: Ref,
+  positionLineChange: () => void
 ) => {
   let id: number = 1;
   const positionLineMap = reactive<AnyRecord>([]);
@@ -69,9 +74,9 @@ export const useAddPositionLine = (
         info.coordinate,
         isY
       );
-      positionLineMap[currentId].showTip = false;
       positionLineMap[currentId].translate = checkInfo.translate;
       positionLineMap[currentId].coordinate = checkInfo.coordinate;
+      positionLineChange();
     }
     currentId = -1;
   }
@@ -79,9 +84,9 @@ export const useAddPositionLine = (
     if (rulerRef.value) {
       const node = rulerRef.value as HTMLElement;
       function mousedownEvent(e: MouseEvent) {
-        const rulerOffset = getOffset(node);
+        const rulerRect = getRectInfo(node);
         const start = isY ? e.pageY : e.pageX;
-        const translate = start - (isY ? rulerOffset.top : rulerOffset.left);
+        const translate = start - (isY ? rulerRect.y : rulerRect.x);
         const lineInfo: AnyRecord = {
           startTranslate: translate,
           translate,

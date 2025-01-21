@@ -20,15 +20,9 @@ export const getGridSize = (scale: number) => {
   return 1;
 };
 
-// 获取元素的offsetTop和offsetLeft
-export const getOffset = (node: HTMLElement) => {
-  const rect = node.getBoundingClientRect();
-  const top =
-    rect.top + (document.body.scrollTop || document.documentElement.scrollTop);
-  const left =
-    rect.left +
-    (document.body.scrollLeft || document.documentElement.scrollLeft);
-  return { top, left };
+// 获取元素的rect: width, height, top, left, x, y
+export const getRectInfo = (node: HTMLElement) => {
+  return node.getBoundingClientRect();
 };
 /**
  * 定位线的位移转换为坐标

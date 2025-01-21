@@ -1,3 +1,4 @@
+import { Component } from 'vue';
 import { ComponentOptionsMixin } from 'vue';
 import { ComponentProvideOptions } from 'vue';
 import { CreateComponentPublicInstanceWithMixins } from 'vue';
@@ -8,92 +9,7 @@ import { GlobalDirectives } from 'vue';
 import { PropType } from 'vue';
 import { PublicProps } from 'vue';
 
-declare const __VLS_component: DefineComponent<ExtractPropTypes<    {
-scale: {
-type: NumberConstructor;
-default: number;
-};
-minScale: {
-type: NumberConstructor;
-default: number;
-};
-maxScale: {
-type: NumberConstructor;
-default: number;
-};
-canScale: {
-type: BooleanConstructor;
-default: boolean;
-};
-autoCenter: {
-type: BooleanConstructor;
-default: boolean;
-};
-autoScale: {
-type: BooleanConstructor;
-default: boolean;
-};
-containerAutoSize: {
-type: BooleanConstructor;
-default: boolean;
-};
-containerWidth: {
-type: NumberConstructor;
-default: number;
-};
-containerHeight: {
-type: NumberConstructor;
-default: number;
-};
-containerXPadding: {
-type: NumberConstructor;
-default: number;
-};
-containerYPadding: {
-type: NumberConstructor;
-default: number;
-};
-canvasWidth: {
-type: NumberConstructor;
-default: number;
-};
-canvasHeight: {
-type: NumberConstructor;
-default: number;
-};
-proxyScaleKey: {
-type: BooleanConstructor;
-default: boolean;
-};
-useScrollBar: {
-type: BooleanConstructor;
-default: boolean;
-};
-useRuler: {
-type: BooleanConstructor;
-default: boolean;
-};
-usePositionLine: {
-type: BooleanConstructor;
-default: boolean;
-};
-positionLineConfig: {
-type: PropType<PositionLineConfig>;
-default: Required<PositionLineConfig>;
-};
-canvasStyle: {
-type: PropType<AnyRecord>;
-default: AnyRecord;
-};
-scrollBarConfig: {
-type: PropType<ScrollBarConfig>;
-default: Required<ScrollBarConfig>;
-};
-rulerConfig: {
-type: PropType<RulerConfig>;
-default: Required<RulerConfig>;
-};
-}>, {
+declare const __VLS_component: DefineComponent<ScaleRulerOption, {
 reset: typeof reset;
 changeScale: typeof changeScale;
 removeAllPositionLine: typeof removeAllPositionLine;
@@ -103,99 +19,15 @@ showAllPositionLine(): void;
 hideAllPositionLine(): void;
 addAdsorptionLine(data: number | number[], isY?: boolean): void;
 removeAdsorptionLine(data: number | number[], isY?: boolean): void;
-getPositionLineList: typeof getPositionLineList;
 }, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
 onMove: (...args: any[]) => void;
+positionLineChange: (...args: any[]) => void;
 adsorptionLineChange: (...args: any[]) => void;
 "update:scale": (...args: any[]) => void;
 onScale: (...args: any[]) => void;
-}, string, PublicProps, Readonly<ExtractPropTypes<    {
-scale: {
-type: NumberConstructor;
-default: number;
-};
-minScale: {
-type: NumberConstructor;
-default: number;
-};
-maxScale: {
-type: NumberConstructor;
-default: number;
-};
-canScale: {
-type: BooleanConstructor;
-default: boolean;
-};
-autoCenter: {
-type: BooleanConstructor;
-default: boolean;
-};
-autoScale: {
-type: BooleanConstructor;
-default: boolean;
-};
-containerAutoSize: {
-type: BooleanConstructor;
-default: boolean;
-};
-containerWidth: {
-type: NumberConstructor;
-default: number;
-};
-containerHeight: {
-type: NumberConstructor;
-default: number;
-};
-containerXPadding: {
-type: NumberConstructor;
-default: number;
-};
-containerYPadding: {
-type: NumberConstructor;
-default: number;
-};
-canvasWidth: {
-type: NumberConstructor;
-default: number;
-};
-canvasHeight: {
-type: NumberConstructor;
-default: number;
-};
-proxyScaleKey: {
-type: BooleanConstructor;
-default: boolean;
-};
-useScrollBar: {
-type: BooleanConstructor;
-default: boolean;
-};
-useRuler: {
-type: BooleanConstructor;
-default: boolean;
-};
-usePositionLine: {
-type: BooleanConstructor;
-default: boolean;
-};
-positionLineConfig: {
-type: PropType<PositionLineConfig>;
-default: Required<PositionLineConfig>;
-};
-canvasStyle: {
-type: PropType<AnyRecord>;
-default: AnyRecord;
-};
-scrollBarConfig: {
-type: PropType<ScrollBarConfig>;
-default: Required<ScrollBarConfig>;
-};
-rulerConfig: {
-type: PropType<RulerConfig>;
-default: Required<RulerConfig>;
-};
-}>> & Readonly<{
+}, string, PublicProps, Readonly<ScaleRulerOption> & Readonly<{
 onOnMove?: ((...args: any[]) => any) | undefined;
+onPositionLineChange?: ((...args: any[]) => any) | undefined;
 onAdsorptionLineChange?: ((...args: any[]) => any) | undefined;
 "onUpdate:scale"?: ((...args: any[]) => any) | undefined;
 onOnScale?: ((...args: any[]) => any) | undefined;
@@ -221,7 +53,7 @@ positionLineConfig: PositionLineConfig;
 canvasStyle: AnyRecord;
 scrollBarConfig: ScrollBarConfig;
 rulerConfig: RulerConfig;
-}, {}, {}, {}, string, ComponentProvideOptions, true, {}, HTMLDivElement>;
+}, {}, {}, {}, string, ComponentProvideOptions, false, {}, HTMLDivElement>;
 
 declare function __VLS_template(): {
     attrs: Partial<{}>;
@@ -248,14 +80,15 @@ declare function __VLS_template(): {
         required: true;
         };
         }>> & Readonly<{
+        onPositionLineChange?: ((...args: any[]) => any) | undefined;
         onAdsorptionLineChange?: ((...args: any[]) => any) | undefined;
         }>, {
         modifyAdsorptionList: (data: number | number[], isAdd?: boolean) => void;
         removeAllPositionLine: () => void;
         togglePositionLine: (show?: boolean) => void;
         toggleRuler: (show?: boolean) => void;
-        getPositionLineList: () => number[];
         }, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
+        positionLineChange: (...args: any[]) => void;
         adsorptionLineChange: (...args: any[]) => void;
         }, PublicProps, {
         isY: boolean;
@@ -284,13 +117,13 @@ declare function __VLS_template(): {
         required: true;
         };
         }>> & Readonly<{
+        onPositionLineChange?: ((...args: any[]) => any) | undefined;
         onAdsorptionLineChange?: ((...args: any[]) => any) | undefined;
         }>, {
         modifyAdsorptionList: (data: number | number[], isAdd?: boolean) => void;
         removeAllPositionLine: () => void;
         togglePositionLine: (show?: boolean) => void;
         toggleRuler: (show?: boolean) => void;
-        getPositionLineList: () => number[];
         }, {}, {}, {}, {
         isY: boolean;
         }> | null;
@@ -312,14 +145,15 @@ declare function __VLS_template(): {
         required: true;
         };
         }>> & Readonly<{
+        onPositionLineChange?: ((...args: any[]) => any) | undefined;
         onAdsorptionLineChange?: ((...args: any[]) => any) | undefined;
         }>, {
         modifyAdsorptionList: (data: number | number[], isAdd?: boolean) => void;
         removeAllPositionLine: () => void;
         togglePositionLine: (show?: boolean) => void;
         toggleRuler: (show?: boolean) => void;
-        getPositionLineList: () => number[];
         }, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
+        positionLineChange: (...args: any[]) => void;
         adsorptionLineChange: (...args: any[]) => void;
         }, PublicProps, {
         isY: boolean;
@@ -348,13 +182,13 @@ declare function __VLS_template(): {
         required: true;
         };
         }>> & Readonly<{
+        onPositionLineChange?: ((...args: any[]) => any) | undefined;
         onAdsorptionLineChange?: ((...args: any[]) => any) | undefined;
         }>, {
         modifyAdsorptionList: (data: number | number[], isAdd?: boolean) => void;
         removeAllPositionLine: () => void;
         togglePositionLine: (show?: boolean) => void;
         toggleRuler: (show?: boolean) => void;
-        getPositionLineList: () => number[];
         }, {}, {}, {}, {
         isY: boolean;
         }> | null;
@@ -394,11 +228,6 @@ declare interface ContainerInfo extends AnyRecord {
 declare const _default: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
 export default _default;
 
-/**
- * 获取所有定位线的坐标
- */
-declare function getPositionLineList(isY: boolean): number[];
-
 export declare interface PositionLineConfig {
     lineColor?: string;
     padding?: number;
@@ -406,6 +235,9 @@ export declare interface PositionLineConfig {
     zIndex?: number;
     adsorptionXList?: number[];
     adsorptionYList?: number[];
+    useRemove?: boolean;
+    removeIcon?: string | Component;
+    removeIconFillColor?: string;
 }
 
 declare function removeAllPositionLine(): void;
@@ -416,6 +248,9 @@ declare interface RequiredScaleRulerOpt extends Required<ScaleRulerOption> {
     rulerConfig: Required<RulerConfig>;
 }
 
+/**
+ * 还原
+ *  */
 declare function reset(): void;
 
 export declare interface RulerConfig {
