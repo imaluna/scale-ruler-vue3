@@ -16,7 +16,7 @@ A vue3 public component, an excellent assistant for building a low-code platform
 
 ## Installation
 
-### node
+### Using Package Manager
 
 ```shell
 npm install scale-ruler-vue3 --save
@@ -28,9 +28,42 @@ pnpm add scale-ruler-vue3
 bun add scale-ruler-vue3
 ```
 
+### Import in Browser
+
+#### unpkg
+
+```html
+<head>
+  <!-- Import style -->
+  <link rel="stylesheet" href="//unpkg.com/scale-ruler-vue3/lib/index.css" />
+  <!-- Import Vue 3 -->
+  <script src="//unpkg.com/vue@3"></script>
+  <!-- Import component library -->
+  <script src="//unpkg.com/scale-ruler-vue3"></script>
+</head>
+```
+
+#### jsDelivr
+
+```html
+<head>
+  <!-- Import style -->
+  <link
+    rel="stylesheet"
+    href="//cdn.jsdelivr.net/npm/scale-ruler-vue3/lib/index.css"
+  />
+  <!-- Import Vue 3 -->
+  <script src="//cdn.jsdelivr.net/npm/vue@3"></script>
+  <!-- Import component library -->
+  <script src="//cdn.jsdelivr.net/npm/scale-ruler-vue3"></script>
+</head>
+````
+
+
 ## Quick Start
 
 ```html
+
 <template>
   <ScaleRuler
     ref="scaleRulerRef"
@@ -56,6 +89,7 @@ const opt = reactive({
   }
 });
 </script>
+
 ```
 
 [Reference code](https://github.com/imaluna/scale-ruler-vue3/blob/5c4d6c84dbf9b15e821ddbe43dd0e464eed304b9/packages/examples/src/App.vue#L26)
@@ -148,3 +182,5 @@ const opt = reactive({
 | hideAllPositionLine	| hide all the position line(s) | - | 
 | addAdsorptionLine	| add adsorption line(s) | (data: number \| Array<number>- the value of adsorption line, isY: boolean -Whether it is in the y/vertical direction) | 
 | removeAdsorptionLine	| remove adsorption line(s)  | (data: number \| Array<number>- the value of adsorption line, isY: boolean -Whether it is in the y/vertical direction)| 
+
+

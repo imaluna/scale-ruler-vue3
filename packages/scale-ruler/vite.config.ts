@@ -3,17 +3,14 @@ import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-import vueDevTools from 'vite-plugin-vue-devtools';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 const url = resolve(__dirname, 'tsconfig.json');
-console.log(url);
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
-    vueDevTools(),
     dts({
       rollupTypes: true,
       tsconfigPath: url
@@ -24,7 +21,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'ScaleRuler',
-      fileName: 'index',
+      fileName: (format) => `index${format !== 'umd' ? '.' + format : ''}.js`,
       formats: ['es', 'umd', 'cjs']
     },
     rollupOptions: {
@@ -32,6 +29,9 @@ export default defineConfig({
       output: {
         globals: {
           vue: 'Vue'
+        },
+        assetFileNames: () => {
+          return 'index.css';
         }
       }
     }

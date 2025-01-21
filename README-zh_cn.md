@@ -13,7 +13,7 @@
 
 ## 安装
 
-### node
+### 使用包管理器
 
 ```shell
 npm install scale-ruler-vue3 --save
@@ -24,6 +24,37 @@ pnpm add scale-ruler-vue3
 # or
 bun add scale-ruler-vue3
 ```
+
+### 浏览器直接引入
+
+#### unpkg
+
+```html
+<head>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="//unpkg.com/scale-ruler-vue3/lib/index.css" />
+  <!--引入 Vue 3 -->
+  <script src="//unpkg.com/vue@3"></script>
+  <!-- 引入组件 -->
+  <script src="//unpkg.com/scale-ruler-vue3"></script>
+</head>
+```
+
+#### jsDelivr
+
+```html
+<head>
+  <!-- 引入样式 -->
+  <link
+    rel="stylesheet"
+    href="//cdn.jsdelivr.net/npm/scale-ruler-vue3/lib/index.css"
+  />
+  <!-- 引入 Vue 3 -->
+  <script src="//cdn.jsdelivr.net/npm/vue@3"></script>
+  <!-- 引入组件 -->
+  <script src="//cdn.jsdelivr.net/npm/scale-ruler-vue3"></script>
+</head>
+````
 
 ## 快速开始
 

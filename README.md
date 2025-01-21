@@ -16,7 +16,7 @@ A vue3 public component, an excellent assistant for building a low-code platform
 
 ## Installation
 
-### node
+### Using Package Manager
 
 ```shell
 npm install scale-ruler-vue3 --save
@@ -27,6 +27,39 @@ pnpm add scale-ruler-vue3
 # or
 bun add scale-ruler-vue3
 ```
+
+
+### Import in Browser
+
+#### unpkg
+
+```html
+<head>
+  <!-- Import style -->
+  <link rel="stylesheet" href="//unpkg.com/scale-ruler-vue3/lib/index.css" />
+  <!-- Import Vue 3 -->
+  <script src="//unpkg.com/vue@3"></script>
+  <!-- Import component library -->
+  <script src="//unpkg.com/scale-ruler-vue3"></script>
+</head>
+```
+
+#### jsDelivr
+
+```html
+<head>
+  <!-- Import style -->
+  <link
+    rel="stylesheet"
+    href="//cdn.jsdelivr.net/npm/scale-ruler-vue3/lib/index.css"
+  />
+  <!-- Import Vue 3 -->
+  <script src="//cdn.jsdelivr.net/npm/vue@3"></script>
+  <!-- Import component library -->
+  <script src="//cdn.jsdelivr.net/npm/scale-ruler-vue3"></script>
+</head>
+````
+
 
 ## Quick Start
 
