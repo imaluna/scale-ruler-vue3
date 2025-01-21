@@ -4,7 +4,7 @@ A vue3 public component, an excellent assistant for building a low-code platform
 
 [中文](https://github.com/imaluna/scale-ruler-vue3/blob/main/README-zh_cn.md)
 
-[demo]()
+[demo](https://imaluna.github.io/scale-ruler-vue3/examples/index.html)
 
 ## Features
 
@@ -57,6 +57,8 @@ const opt = reactive({
 });
 </script>
 ```
+
+[Reference code](https://github.com/imaluna/scale-ruler-vue3/blob/5c4d6c84dbf9b15e821ddbe43dd0e464eed304b9/packages/examples/src/App.vue#L26)
 
 ## Attributes
 
@@ -146,7 +148,3 @@ const opt = reactive({
 | hideAllPositionLine	| hide all the position line(s) | - | 
 | addAdsorptionLine	| add adsorption line(s) | (data: number \| Array<number>- the value of adsorption line, isY: boolean -Whether it is in the y/vertical direction) | 
 | removeAdsorptionLine	| remove adsorption line(s)  | (data: number \| Array<number>- the value of adsorption line, isY: boolean -Whether it is in the y/vertical direction)| 
-
-
-
-

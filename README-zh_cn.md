@@ -1,5 +1,7 @@
 一个vue3 公用组件，构建低代码平台的绝佳助手，支持在区域内自由移动、缩放画布，包含标尺、定位线和吸附线功能。
 
+[示例](https://imaluna.github.io/scale-ruler-vue3/examples/index.html)
+
 ## 特性
 
 - vue3 components API
@@ -52,7 +54,7 @@ const opt = reactive({
 });
 </script>
 ```
-
+[参考代码](https://github.com/imaluna/scale-ruler-vue3/blob/5c4d6c84dbf9b15e821ddbe43dd0e464eed304b9/packages/examples/src/App.vue#L26)
 
 ## Attributes
 
