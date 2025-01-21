@@ -9,9 +9,6 @@
     },
     {
       "path": "./packages/examples/tsconfig.json"
-    },
-    {
-      "path": "./packages/common/tsconfig.json"
     }
   ]
 }

@@ -12,7 +12,7 @@ import {
   translateToCoordinate,
   checkAdSorptionLine
 } from '@/utils';
-import { bindMouseMove } from 'common';
+import { bindMouseMove } from '@/utils/mouseEvent';
 
 export const useAddPositionLine = (
   opt: Ref<RequiredScaleRulerOpt>,

@@ -13,7 +13,7 @@ import {
   coordinateToTranslate,
   getRectInfo
 } from '@/utils';
-import { bindMouseMove } from 'common';
+import { bindMouseMove } from '@/utils/mouseEvent';
 
 export const usePositionLineEvent = (
   opt: Ref<RequiredScaleRulerOpt>,

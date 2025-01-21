@@ -4,7 +4,7 @@
 <script setup lang="ts">
 import { computed, toRefs, ref, onMounted } from 'vue';
 import type { PropType } from 'vue';
-import { bindMouseMove } from 'common';
+import { bindMouseMove } from '@/utils/mouseEvent';
 
 import type {
   AnyRecord,

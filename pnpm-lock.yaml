@@ -11,9 +11,6 @@ importers:
       '@element-plus/icons-vue':
         specifier: ^2.3.1
         version: 2.3.1(vue@3.5.13(typescript@5.6.3))
-      common:
-        specifier: workspace:*
-        version: link:packages/common
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
@@ -114,8 +111,6 @@ importers:
       vue-tsc:
         specifier: ^2.1.10
         version: 2.2.0(typescript@5.6.3)
-
-  packages/common: {}
 
   packages/examples: {}
 

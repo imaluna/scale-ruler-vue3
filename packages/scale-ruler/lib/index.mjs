@@ -1,4 +1,4 @@
-import { defineComponent as T, computed as R, openBlock as j, createElementBlock as X, normalizeStyle as Y, renderSlot as ie, toRefs as J, ref as P, onMounted as W, nextTick as ce, reactive as I, watch as E, createElementVNode as H, Fragment as $, toDisplayString as ue, unref as M, withDirectives as ae, createVNode as k, vShow as se, normalizeClass as fe, renderList as pe, createBlock as N, createCommentVNode as D, mergeDefaults as de, withCtx as ve } from "vue";
+import { defineComponent as T, computed as R, openBlock as j, createElementBlock as X, normalizeStyle as Y, renderSlot as ie, toRefs as J, ref as P, onMounted as W, nextTick as ce, reactive as I, watch as E, createElementVNode as H, Fragment as $, toDisplayString as ue, unref as _, withDirectives as ae, createVNode as k, vShow as se, normalizeClass as fe, renderList as pe, createBlock as N, createCommentVNode as D, mergeDefaults as de, withCtx as ve } from "vue";
 const he = (n) => n <= 0.25 ? 40 : n <= 0.5 ? 20 : n <= 1 ? 10 : n <= 2 ? 5 : n <= 4 ? 2 : 1, ge = (n) => n.getBoundingClientRect(), G = (n, h, t) => {
   const { scale: o, translateX: e, translateY: c } = n;
   return (h - (t ? c : e)) / o;
@@ -173,18 +173,18 @@ const te = /* @__PURE__ */ T({
       if (c > 0 && l > 0) {
         const r = e.getContext("2d");
         r.clearRect(0, 0, c, l), s && (r.save(), r.fillStyle = s, r.fillRect(0, 0, c, l), r.restore());
-        const g = t ? f.yRulerWidth : f.xRulerHeight, { translateX: x, translateY: m, scale: a } = h, u = t ? m : x, b = he(a), L = b * a, v = window.devicePixelRatio, _ = -u, w = Math.floor(_ / L), B = Math.floor(
+        const g = t ? f.yRulerWidth : f.xRulerHeight, { translateX: x, translateY: m, scale: a } = h, u = t ? m : x, b = he(a), L = b * a, v = window.devicePixelRatio, O = -u, w = Math.floor(O / L), B = Math.floor(
           ((t ? l : c) - u) / L
         );
         r.save(), r.fillStyle = d, r.font = `${p * v}px ${i}`, r.translate(0.5, 0.5), r.scale(1 / v, 1 / v), t ? r.fillRect((g - 1) * v, 0, 1, l * v) : r.fillRect(0, (g - 1) * v, c * v, 1);
         for (let S = w; S <= B; S++) {
           r.fillStyle = d;
           const C = (u + S * L) * v;
-          let O = g / 4;
-          S % 10 === 0 ? O = g * 4 / 5 : S % 5 === 0 && (O = g / 3), t ? r.fillRect((g - O) * v, C, O * v, 1) : (r.fillRect(C, (g - O) * v, 1, O * v), S % 10 === 0 && (r.fillStyle = y, r.fillText(
+          let M = g / 4;
+          S % 10 === 0 ? M = g * 4 / 5 : S % 5 === 0 && (M = g / 3), t ? r.fillRect((g - M) * v, C, M * v, 1) : (r.fillRect(C, (g - M) * v, 1, M * v), S % 10 === 0 && (r.fillStyle = y, r.fillText(
             String(S * b),
             C + 2 * v,
-            (g + 8 - O) * v
+            (g + 8 - M) * v
           )));
         }
         if (r.restore(), t) {
@@ -364,7 +364,7 @@ const te = /* @__PURE__ */ T({
     if (m <= (e ? L : v) || m >= (e ? b : u))
       f(a);
     else {
-      const _ = q(
+      const O = q(
         t.value,
         o.value,
         n.value.positionLineConfig.adsorptionGap,
@@ -372,7 +372,7 @@ const te = /* @__PURE__ */ T({
         l.value.coordinate,
         e
       );
-      l.value.coordinate = _.coordinate, l.value.translate = _.translate, s();
+      l.value.coordinate = O.coordinate, l.value.translate = O.translate, s();
     }
   }
   function x() {
@@ -392,7 +392,7 @@ const te = /* @__PURE__ */ T({
       }), Z(m, r, y, g);
     }
   }), { removeIconInfo: p };
-}, Oe = /* @__PURE__ */ T({
+}, Me = /* @__PURE__ */ T({
   __name: "PositionLine",
   props: {
     containerInfo: {
@@ -452,9 +452,9 @@ const te = /* @__PURE__ */ T({
         left: (w ? 0 : s.value) + "px"
       };
     }), g = P({}), x = R(() => {
-      const { isY: w } = t, { width: B, height: S } = f.value, { tipWidth: C, tipHeight: O } = g.value;
+      const { isY: w } = t, { width: B, height: S } = f.value, { tipWidth: C, tipHeight: M } = g.value;
       let A, F;
-      return C && O ? (F = w ? "50%" : (d.value + i.value + C >= B ? -C : i.value) + "px", A = w ? (d.value + i.value + O >= S ? -O : i.value) + "px" : "50%") : (F = w ? "50%" : i.value + "px", A = w ? i.value + "px" : "50%"), {
+      return C && M ? (F = w ? "50%" : (d.value + i.value + C >= B ? -C : i.value) + "px", A = w ? (d.value + i.value + M >= S ? -M : i.value) + "px" : "50%") : (F = w ? "50%" : i.value + "px", A = w ? i.value + "px" : "50%"), {
         padding: "5px",
         lineHeight: "18px",
         minWidth: "80px",
@@ -489,10 +489,10 @@ const te = /* @__PURE__ */ T({
     ), v = R(() => ({
       top: L.top + "px",
       left: L.left + "px"
-    })), _ = P(null);
+    })), O = P(null);
     return W(() => {
-      if (_.value) {
-        const w = _.value, B = w.offsetWidth, S = w.offsetHeight;
+      if (O.value) {
+        const w = O.value, B = w.offsetWidth, S = w.offsetHeight;
         g.value.tipWidth = B, g.value.tipHeight = S;
       }
     }), (w, B) => (j(), X($, null, [
@@ -510,25 +510,25 @@ const te = /* @__PURE__ */ T({
           class: "scale-ruler_position-line_tip",
           style: Y(x.value),
           ref_key: "tipRef",
-          ref: _
-        }, ue((n.isY ? "Y" : "X") + ": " + +M(o).coordinate.toFixed(2) + " px"), 5)
+          ref: O
+        }, ue((n.isY ? "Y" : "X") + ": " + +_(o).coordinate.toFixed(2) + " px"), 5)
       ], 4),
-      ae(k(M(p), {
+      ae(k(_(p), {
         class: "scale-ruler_position-line_remove",
         style: Y(v.value),
-        "fill-color": M(l).positionLineConfig.removeIconFillColor,
-        onClick: B[0] || (B[0] = (S) => u(M(o).id))
+        "fill-color": _(l).positionLineConfig.removeIconFillColor,
+        onClick: B[0] || (B[0] = (S) => u(_(o).id))
       }, null, 8, ["style", "fill-color"]), [
-        [se, M(L).show]
+        [se, _(L).show]
       ])
     ], 64));
   }
-}), _e = (n, h) => {
+}), Oe = (n, h) => {
   const t = n.__vccOpts || n;
   for (const [o, e] of h)
     t[o] = e;
   return t;
-}, Me = /* @__PURE__ */ _e(Oe, [["__scopeId", "data-v-6845710d"]]), Re = ["width", "height"], ne = /* @__PURE__ */ T({
+}, _e = /* @__PURE__ */ Oe(Me, [["__scopeId", "data-v-6845710d"]]), Re = ["width", "height"], ne = /* @__PURE__ */ T({
   __name: "Ruler",
   props: {
     containerInfo: {
@@ -551,10 +551,10 @@ const te = /* @__PURE__ */ T({
   emits: ["adsorptionLineChange", "positionLineChange"],
   setup(n, { expose: h, emit: t }) {
     const o = n, { opt: e, transformInfo: c, containerInfo: l } = J(o), f = R(() => {
-      const { isY: v, containerInfo: _, opt: w } = o;
+      const { isY: v, containerInfo: O, opt: w } = o;
       return {
-        width: v ? w.rulerConfig.yRulerWidth : _.width,
-        height: v ? _.height : w.rulerConfig.xRulerHeight
+        width: v ? w.rulerConfig.yRulerWidth : O.width,
+        height: v ? O.height : w.rulerConfig.xRulerHeight
       };
     }), s = R(() => ({
       position: "absolute",
@@ -589,7 +589,7 @@ const te = /* @__PURE__ */ T({
       x
     );
     function x() {
-      const v = g.filter((_) => !!_.show).map((_) => _.coordinate);
+      const v = g.filter((O) => !!O.show).map((O) => O.coordinate);
       p("positionLineChange", v, !o.isY);
     }
     function m(v) {
@@ -601,8 +601,8 @@ const te = /* @__PURE__ */ T({
       }), x();
     }
     function u(v = !0) {
-      Object.keys(g).forEach((_) => {
-        g[_].show = v;
+      Object.keys(g).forEach((O) => {
+        g[O].show = v;
       }), x();
     }
     const b = P(!0);
@@ -614,7 +614,7 @@ const te = /* @__PURE__ */ T({
       removeAllPositionLine: a,
       togglePositionLine: u,
       toggleRuler: L
-    }), (v, _) => (j(), X($, null, [
+    }), (v, O) => (j(), X($, null, [
       ae(H("canvas", {
         ref_key: "rulerRef",
         ref: i,
@@ -628,14 +628,14 @@ const te = /* @__PURE__ */ T({
         key: 0,
         class: fe("position-line-" + (o.isY ? "x" : "y"))
       }, [
-        (j(!0), X($, null, pe(Object.keys(M(g)), (w) => (j(), N(Me, {
+        (j(!0), X($, null, pe(Object.keys(_(g)), (w) => (j(), N(_e, {
           key: w,
           opt: o.opt,
           "is-y": !o.isY,
           "transform-info": o.transformInfo,
           "container-info": o.containerInfo,
-          "line-info": M(g)[w],
-          "adsorption-list": M(y),
+          "line-info": _(g)[w],
+          "adsorption-list": _(y),
           onRemovePositionLine: m,
           onPositionLineChange: x
         }, null, 8, ["opt", "is-y", "transform-info", "container-info", "line-info", "adsorption-list"]))), 128))
@@ -709,8 +709,8 @@ function je() {
   }
   function x(a, u, b) {
     b = b || {}, b.arrayMerge = b.arrayMerge || s, b.isMergeableObject = b.isMergeableObject || n, b.cloneUnlessOtherwiseSpecified = f;
-    var L = Array.isArray(u), v = Array.isArray(a), _ = L === v;
-    return _ ? L ? b.arrayMerge(a, u, b) : g(a, u, b) : f(u, b);
+    var L = Array.isArray(u), v = Array.isArray(a), O = L === v;
+    return O ? L ? b.arrayMerge(a, u, b) : g(a, u, b) : f(u, b);
   }
   x.all = function(u, b) {
     if (!Array.isArray(u))
@@ -933,13 +933,13 @@ const Ae = (n, h, t) => ({ boundaryInfo: R(() => le(n, h, t.scale)) }), V = (n, 
           i && clearTimeout(i);
           const r = -p.deltaX, g = -p.deltaY;
           let x = "";
-          const { opacity: m = 0.4 } = n.value.scrollBarConfig, { isXLarge: a, isYLarge: u } = c.value, { maxTranslateX: b, minTranslateX: L, maxTranslateY: v, minTranslateY: _ } = o.value;
+          const { opacity: m = 0.4 } = n.value.scrollBarConfig, { isXLarge: a, isYLarge: u } = c.value, { maxTranslateX: b, minTranslateX: L, maxTranslateY: v, minTranslateY: O } = o.value;
           a && Math.abs(r) > Math.abs(g) && (d += r, d = Math.max(
             Math.min(d, b),
             L
           ), l.xOpacity = m, l.yOpacity = 0, t.translateX = d, x = "x"), u && Math.abs(g) > Math.abs(r) && (x = "y", y += g, y = Math.max(
             Math.min(y, v),
-            _
+            O
           ), l.yOpacity = m, l.xOpacity = 0, t.translateY = y), x && (s(
             t.translateX,
             t.translateY
@@ -990,12 +990,12 @@ const Ae = (n, h, t) => ({ boundaryInfo: R(() => le(n, h, t.scale)) }), V = (n, 
       (C) => {
         if (C) {
           if (!y.scale) {
-            const O = {
+            const M = {
               scale: C,
               translateX: i.translateX,
               translateY: i.translateY
             };
-            Object.assign(y, O);
+            Object.assign(y, M);
           }
           c("update:scale", C);
         }
@@ -1014,8 +1014,8 @@ const Ae = (n, h, t) => ({ boundaryInfo: R(() => le(n, h, t.scale)) }), V = (n, 
     function r(C) {
       c("onScale", C);
     }
-    function g(C, O) {
-      c("onMove", C, O);
+    function g(C, M) {
+      c("onMove", C, M);
     }
     function x(C) {
       V(e, f, i, C, r, g);
@@ -1038,17 +1038,17 @@ const Ae = (n, h, t) => ({ boundaryInfo: R(() => le(n, h, t.scale)) }), V = (n, 
       r,
       g
     );
-    function a(C, O) {
-      c("adsorptionLineChange", C, O);
+    function a(C, M) {
+      c("adsorptionLineChange", C, M);
     }
-    function u(C, O) {
-      c("positionLineChange", C, O);
+    function u(C, M) {
+      c("positionLineChange", C, M);
     }
     function b() {
       Object.assign(i, y);
     }
     const L = P(null), v = P(null);
-    function _() {
+    function O() {
       e.value.useRuler && (L.value && L.value.removeAllPositionLine(), v.value && v.value.removeAllPositionLine());
     }
     function w(C = !0) {
@@ -1057,13 +1057,13 @@ const Ae = (n, h, t) => ({ boundaryInfo: R(() => le(n, h, t.scale)) }), V = (n, 
     function B(C = !0) {
       e.value.useRuler && (L.value && L.value.togglePositionLine(C), v.value && v.value.togglePositionLine(C));
     }
-    function S(C, O = !0, A = !1) {
-      e.value.useRuler && (A && L.value && L.value.modifyAdsorptionList(C, O), !A && v.value && v.value.modifyAdsorptionList(C, O));
+    function S(C, M = !0, A = !1) {
+      e.value.useRuler && (A && L.value && L.value.modifyAdsorptionList(C, M), !A && v.value && v.value.modifyAdsorptionList(C, M));
     }
     return h({
       reset: b,
       changeScale: x,
-      removeAllPositionLine: _,
+      removeAllPositionLine: O,
       showRuler() {
         w();
       },
@@ -1076,25 +1076,25 @@ const Ae = (n, h, t) => ({ boundaryInfo: R(() => le(n, h, t.scale)) }), V = (n, 
       hideAllPositionLine() {
         B(!1);
       },
-      addAdsorptionLine(C, O = !1) {
-        S(C, !0, O);
+      addAdsorptionLine(C, M = !1) {
+        S(C, !0, M);
       },
-      removeAdsorptionLine(C, O = !1) {
-        S(C, !1, O);
+      removeAdsorptionLine(C, M = !1) {
+        S(C, !1, M);
       }
-    }), (C, O) => (j(), X("div", {
+    }), (C, M) => (j(), X("div", {
       class: "scale-ruler",
       ref_key: "container",
       ref: l,
-      style: Y(M(s))
+      style: Y(_(s))
     }, [
       e.value.useRuler ? (j(), X($, { key: 0 }, [
         k(ne, {
           ref_key: "xRuler",
           ref: L,
           opt: e.value,
-          "container-info": M(f),
-          "transform-info": M(i),
+          "container-info": _(f),
+          "transform-info": _(i),
           onAdsorptionLineChange: a,
           onPositionLineChange: u
         }, null, 8, ["opt", "container-info", "transform-info"]),
@@ -1103,38 +1103,38 @@ const Ae = (n, h, t) => ({ boundaryInfo: R(() => le(n, h, t.scale)) }), V = (n, 
           ref: v,
           "is-y": "",
           opt: e.value,
-          "container-info": M(f),
-          "transform-info": M(i),
+          "container-info": _(f),
+          "transform-info": _(i),
           onAdsorptionLineChange: a,
           onPositionLineChange: u
         }, null, 8, ["opt", "container-info", "transform-info"])
       ], 64)) : D("", !0),
       k(me, {
-        "container-info": M(f),
+        "container-info": _(f),
         opt: e.value,
-        "transform-info": M(i)
+        "transform-info": _(i)
       }, {
         default: ve(() => [
           ie(C.$slots, "default")
         ]),
         _: 3
       }, 8, ["container-info", "opt", "transform-info"]),
-      M(d).isXLarge ? (j(), N(te, {
+      _(d).isXLarge ? (j(), N(te, {
         key: 1,
         opt: e.value,
-        "container-info": M(f),
-        "scroll-bar-info": M(d),
+        "container-info": _(f),
+        "scroll-bar-info": _(d),
         "global-info": m,
-        "transform-info": M(i),
+        "transform-info": _(i),
         onOnMove: g
       }, null, 8, ["opt", "container-info", "scroll-bar-info", "global-info", "transform-info"])) : D("", !0),
-      M(d).isYLarge ? (j(), N(te, {
+      _(d).isYLarge ? (j(), N(te, {
         key: 2,
         opt: e.value,
-        "container-info": M(f),
-        "scroll-bar-info": M(d),
+        "container-info": _(f),
+        "scroll-bar-info": _(d),
         "global-info": m,
-        "transform-info": M(i),
+        "transform-info": _(i),
         onOnMove: g,
         "is-y": ""
       }, null, 8, ["opt", "container-info", "scroll-bar-info", "global-info", "transform-info"])) : D("", !0)
